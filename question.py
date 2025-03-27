@@ -11,8 +11,7 @@ class Question:
         self.category = category
 
     def get_questionID(self):
-        # Verbindung zur Datenbank und Cursor erstellen
-        
+        ids = []
         # SQL-Abfrage
         cursor.execute(""" 
         SELECT 
@@ -28,9 +27,17 @@ class Question:
         
         # Ergebnisse holen und ausgeben
         rows = cursor.fetchall()
-        for row in rows:
-            print(row)
+        ids.append(rows)
+
+        print(ids)
+        return ids
+    
+    def get_question(self, ids):
+        numbers = [ids[0] for ids in ids[0]]
+        random_choice = random.choice(numbers)
+        print(random_choice)
         
-        # Verbindung schließen
-        # con.commit()
-        # con.close()
+        cursor.execute(""" 
+        SELECT * FROM Question WHERE QuestionID = ?""",(random_choice,)), 
+        rows = cursor.fetchall()
+        print(rows)
