@@ -6,22 +6,22 @@ cursor = con.cursor()
 # Beispiel-Tabelle erstellen
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Category (
-    CategoryID INTEGER PRIMARY KEY AUTOINCREMENT,
+    categoryID INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
 );
 """)
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Difficulty (
-    DifficultyID INTEGER PRIMARY KEY AUTOINCREMENT,
+    difficultyID INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
-    Points INTEGER NOT NULL,
+    points INTEGER NOT NULL,
     description TEXT
 );
 """)
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Question (
-    QuestionID INTEGER PRIMARY KEY AUTOINCREMENT,
+    questionID INTEGER PRIMARY KEY AUTOINCREMENT,
     categoryID INTEGER,
     difficultyID INTEGER,
     question TEXT NOT NULL,
@@ -29,15 +29,74 @@ CREATE TABLE IF NOT EXISTS Question (
     incorrect_answers1 TEXT,
     incorrect_answers2 TEXT,
     incorrect_answers3 TEXT,
-    FOREIGN KEY (categoryID) REFERENCES Category(CategoryID),
-    FOREIGN KEY (difficultyID) REFERENCES Difficulty(DifficultyID)
+    FOREIGN KEY (categoryID) REFERENCES Category(categoryID),
+    FOREIGN KEY (difficultyID) REFERENCES Difficulty(difficultyID)
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Player (
+    playerID INTEGER PRIMARY KEY AUTOINCREMENT,
+    playerPassword TEXT,
+    playerName TEXT,
+    playerScore INTEGER,
+    wins TEXT
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Game (
+    gameID INTEGER PRIMARY KEY AUTOINCREMENT,
+    winnerID INTEGER,
+    date DATE,
+    FOREIGN KEY (winnerID) REFERENCES Player(playerID)
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Player_of_Game (
+    gameID INTEGER,
+    playerID INTEGER,
+    FOREIGN KEY (playerID) REFERENCES Player(playerID),
+    FOREIGN KEY (gameID) REFERENCES Game(gameID)
 );
 """)
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS Player (
-    PlayerID INTEGER PRIMARY KEY AUTOINCREMENT,
-    playerName TEXT,
-    playerScore INT
+CREATE TABLE IF NOT EXISTS Game_Question (
+    gameID INTEGER,
+    questionID INTEGER,
+    played INTEGER,
+    FOREIGN KEY (questionID) REFERENCES Question(questionID),
+    FOREIGN KEY (gameID) REFERENCES Game(gameID)
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Achievement (
+    achievementID INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    points INTEGER
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Player_to_achievement (
+    playerID INTEGER,
+    achievementID INTEGER,
+    FOREIGN KEY (playerID) REFERENCES Player(playerID),
+    FOREIGN KEY (achievementID) REFERENCES Achievement(achievementID)
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS right_or_wrong (
+    playerID INTEGER,
+    questionID INTEGER,
+    gameID INTEGER,
+    answerCorrectly INTEGER,
+    FOREIGN KEY (playerID) REFERENCES Player(playerID),
+    FOREIGN KEY (questionID) REFERENCES Question(questionID),
+    FOREIGN KEY (gameID) REFERENCES Game(gameID)
 );
 """)
 

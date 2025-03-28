@@ -4,8 +4,10 @@ class achievment:
     
     def get_name():
         return
-    def get_bedingunge():
+    
+    def get_requierments():
         return
+    
     def achieved():
         return
     
