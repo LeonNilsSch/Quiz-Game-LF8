@@ -11,12 +11,11 @@ class Question:
         self.category = category
 
     def get_questionID(self):
-        ids = []
+        selected = []
         # SQL-Abfrage
         cursor.execute(""" 
         SELECT 
-            q.QuestionID,
-            c.name
+            q.QuestionID
         FROM 
             Question q
         JOIN 
@@ -27,17 +26,27 @@ class Question:
         
         # Ergebnisse holen und ausgeben
         rows = cursor.fetchall()
-        ids.append(rows)
+        # selected.append(rows)
 
-        print(ids)
+        print(rows)
+        
+        ids = [rows[0] for rows in rows]
         return ids
     
+    
     def get_question(self, ids):
-        numbers = [ids[0] for ids in ids[0]]
-        random_choice = random.choice(numbers)
+        
+        random_choice = random.choice(ids)
         print(random_choice)
         
         cursor.execute(""" 
-        SELECT * FROM Question WHERE QuestionID = ?""",(random_choice,)), 
+        SELECT QuestionID, question, correct_answer, incorrect_answers3, incorrect_answers2, incorrect_answers3 FROM Question WHERE QuestionID = ?""",(random_choice,)), 
         rows = cursor.fetchall()
+        
         print(rows)
+        question = rows[0][1]
+        correct_answer = rows[0][2]
+        inccorrect_answer1 = rows[0][3]
+        inccorrect_answer2 = rows[0][4]
+        inccorrect_answer3 = rows[0][5]
+        print(question, correct_answer,inccorrect_answer1, inccorrect_answer2,inccorrect_answer3)
