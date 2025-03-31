@@ -1,5 +1,5 @@
 import sqlite3
-con = sqlite3.connect("database.db")
+con = sqlite3.connect("./Database/database.db")
 cursor = con.cursor()
 
 class Player: 
@@ -24,6 +24,9 @@ class Player:
             return
         
         def get_answer(self):
+            return
+        
+        def insert_answer(self):
             return
         
         

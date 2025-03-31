@@ -15,7 +15,7 @@ def login(start_game_callback):
     # Passwort hash erstellen
     hashed_password = hash_password(password)
 
-    con = sqlite3.connect("database.db")
+    con = sqlite3.connect("./Database/database.db")
     cursor = con.cursor()
 
     cursor.execute("SELECT * FROM Player WHERE Playername = ? AND playerPassword = ?", (username, hashed_password))
