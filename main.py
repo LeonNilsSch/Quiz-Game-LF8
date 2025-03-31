@@ -1,9 +1,12 @@
 import sqlite3
-from question_repository import QuestionRepository
+from repositories.question_repository import QuestionRepository
 from question import Question
-from game_repository import Game
-from category_repository import CatecoryRepository
-from difficulty_repository import DifficultyRepository
+#from repositories.game_repository import GameRepository
+from repositories.category_repository import CatecoryRepository
+from repositories.difficulty_repository import DifficultyRepository
+from repositories.achievment_repository import AchievmentRepository
+from repositories.player_repository import PlayerRepoisitory
+
 # Verbindung zur Datenbank herstellen
 # con = sqlite3.connect("database.db")
 # Frage-Objekt erstellen
@@ -29,6 +32,11 @@ d = DifficultyRepository()
 difficultyid = d.get_difficultyId_from_questionId(questionid)
 d.get_difficulty_points(difficultyid)
 d.get_all_difficulties()
+
+a =AchievmentRepository()
+a.create_new_achievments()
+
+p=PlayerRepoisitory()
 
 # Verbindung schließen
 # con.commit()

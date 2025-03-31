@@ -13,3 +13,7 @@ class Question:
     
     def calculate_score(self):
         return
+    
+    def right_or_wrong(self,answer_player, correct_answer):
+        return answer_player == correct_answer  
+        

@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS Player (
     playerPassword TEXT,
     playerName TEXT,
     playerScore INTEGER,
-    wins TEXT
+    wins TEXT,
+    playedGames INTEGER
 );
 """)
 
@@ -77,7 +78,8 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS Achievement (
     achievementID INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    points INTEGER
+    points INTEGER,
+    requirements TEXT
 );
 """)
 
