@@ -2,7 +2,7 @@ import sqlite3
 import tkinter as tk
 from tkinter import messagebox
 from login import login_screen
-from question import Question
+from question_repository import QuestionRepository
 
 # Funktion zum Starten des Spiels nach erfolgreichem Login
 def start_game():
@@ -10,7 +10,7 @@ def start_game():
     con = sqlite3.connect("database.db")
     
     # Create a new question object and pass the connection
-    q = Question("Sample question", ["Option1", "Option2"], "Option1", "Politics", con)
+    q = QuestionRepository("Sample question", ["Option1", "Option2"], "Option1", "Politics", con)
     
     # Get question IDs based on the category
     ids = q.get_questionIDs_with_Categorys("Politics")  # Example category

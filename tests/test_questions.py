@@ -1,5 +1,5 @@
 import unittest
-from question import Questions
+from question_repository import Questions
 
 class testQuetions(unittest.TestCase):
     def testgetQuestions(self):

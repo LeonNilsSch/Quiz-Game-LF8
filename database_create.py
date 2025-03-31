@@ -49,7 +49,9 @@ CREATE TABLE IF NOT EXISTS Game (
     gameID INTEGER PRIMARY KEY AUTOINCREMENT,
     winnerID INTEGER,
     date DATE,
+    game_key TEXT,
     FOREIGN KEY (winnerID) REFERENCES Player(playerID)
+    
 );
 """)
 

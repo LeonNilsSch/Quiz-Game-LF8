@@ -26,6 +26,9 @@ class Player:
         def get_answer(self):
             return
         
+        def insert_answer(self):
+            return
+        
         
         def get_playerID(self):
              cursor.execute(""" 
