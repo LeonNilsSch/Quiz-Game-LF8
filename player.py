@@ -13,22 +13,6 @@ class Player:
         self.correctHardQuestions = correctHardQuestions
         self.correctMediumQuestions = correctMediumQuestions
         self.correctEasyQuestions = correctEasyQuestions
-
-    def add_score (self, punkte: int):
-        self.score = punkte
-        return
-
-    def get_score (self):
-        return self.score
-        
-    def get_winns(self):
-        return self.wins
-        
-    def get_games(self):
-        return
-        
-    def get_answer(self):
-        return
         
     def insert_answer(self):
         return
