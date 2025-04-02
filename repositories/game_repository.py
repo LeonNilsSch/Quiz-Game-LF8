@@ -21,7 +21,10 @@ class GameRepository(DatabaseHelper):
     def fill_player_of_game(self,playerID,GameID):
         self.cursor.execute("INSERT INTO Player_of_Game (playerID, gameID) VALUES (?, ?)", 
                (playerID, GameID))
-        self.con.commit()  
+        self.con.commit()
+        
+    def get_player_score_ingame(self):
+        return
     
         
     

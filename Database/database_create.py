@@ -1,5 +1,5 @@
 import sqlite3
-con = sqlite3.connect("database.db")
+con = sqlite3.connect("Database/database.db")
 # Cursor-Objekt zum Ausführen von SQL-Befehlen
 cursor = con.cursor()
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Question (
     questionID INTEGER PRIMARY KEY AUTOINCREMENT,
     categoryID INTEGER,
     difficultyID INTEGER,
-    question TEXT NOT NULL,
+    question TEXT UNIQUE NOT NULL,
     correct_answer TEXT NOT NULL,
     incorrect_answers1 TEXT,
     incorrect_answers2 TEXT,
@@ -38,10 +38,13 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS Player (
     playerID INTEGER PRIMARY KEY AUTOINCREMENT,
     playerPassword TEXT,
-    playerName TEXT,
+    playerName TEXT UNIQUE,
     playerScore INTEGER,
     wins TEXT,
-    playedGames INTEGER
+    playedGames INTEGER,
+    correctHardQuestions INTEGER,
+    correctMediumQuestions INTEGER,
+    correctEasyQuestions INTEGER
 );
 """)
 
@@ -77,9 +80,10 @@ CREATE TABLE IF NOT EXISTS Game_Question (
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Achievement (
     achievementID INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
+    name TEXT UNIQUE,
     points INTEGER,
-    requirements TEXT
+    condition_type TEXT,
+    value INTEGER
 );
 """)
 

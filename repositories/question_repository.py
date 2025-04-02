@@ -69,7 +69,17 @@ class QuestionRepository:
         self.cursor.execute("""
                                 INSERT INTO right_or_wrong(playerID,gameID,questionID,right) VALUES(?,?,?,?)
                              """, (playerID,gameID,questionID,right))
-        
         return
+    
+    def get_question_points(self,questionId):
+        self.cursor.execute(""" 
+        SELECT d.difficultyID, d.points
+        FROM Difficulty d
+        JOIN Question q ON d.difficultyID = q.difficultyID
+        WHERE q.questionID = ?
+        """, (questionId,))
+        
+        rows = self.cursor.fetchall()
+        return [row[0] for row in rows]
     
     

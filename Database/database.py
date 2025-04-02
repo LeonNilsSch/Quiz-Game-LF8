@@ -2,11 +2,11 @@ import sqlite3
 import json
 
 # Verbindung zur SQLite-Datenbank
-conn = sqlite3.connect("database.db")
+conn = sqlite3.connect("Database/database.db")
 cursor = conn.cursor()
 
 # JSON-Datei laden
-with open("test_fragen.json", "r", encoding="utf-8") as f:
+with open("tests/test_fragen.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
 # Category und Difficulty zwischenspeichern (damit IDs nicht doppelt gespeichert werden)

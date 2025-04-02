@@ -10,10 +10,15 @@ class DatabaseHelper:
         self.cursor.execute(f""" 
         SELECT {column} FROM {table} WHERE {condition_column} = ? 
         """, (condition_value,))
-        result = self.cursor.fetchone()
+        result = self.cursor.fetchall()
         
         if result:
-            print(result[0])  # Falls Debugging gewünscht ist
-            return result[0]
-        
+        # Wenn ein Wert zurückgegeben wurde, aber nur ein Wert erwartet wird
+            if len(result[0]) == 1:
+                return result[0][0]  # Gibt den Wert ohne Klammern zurück (als Integer oder String)
+            
+            # Wenn mehrere Werte im Tupel sind, dann tupel entpacken
+            else:
+                return result[0]  # Gibt das Tupel zurück
+
         return None  # Falls kein Wert gefunden wurde
