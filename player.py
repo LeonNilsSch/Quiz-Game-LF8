@@ -42,20 +42,26 @@ class Player:
     def create_user(self):
         return
         
-    def receive_achievement(self, achievment_requierments,achievementID, player_achievements):
-        requirement, required_value = achievment_requierments
-    
+    def receive_achievement(self, achievement_requirements, achievementID, player_achievements):
+        requirement, required_value = achievement_requirements
+
         # Sicherstellen, dass player_achievements eine Liste oder ein Tupel ist
         if not isinstance(player_achievements, (list, tuple)):
             player_achievements = [player_achievements]
         
-        # Überprüfen, ob das Achievement bereits vorhanden ist
-        if achievementID in player_achievements:
-            return
+        # Prüfen, ob player_achievements leer ist
+        if not player_achievements:
+            return  # Falls player_achievements leer ist, sofort zurückkehren
         
+        # Konvertiere die Liste von Tupeln in eine Liste von Zahlen (Achievement IDs)
+        achievement_ids = {ach[0] for ach in player_achievements}  # Set für schnellere Suche
+
+        # Falls Achievement bereits vorhanden ist, abbrechen
+        if achievementID in achievement_ids:
+            return 
+
         # Überprüfen, ob das erforderliche Attribut existiert und den Wert erreicht
         current_value = getattr(self, requirement, None)
         if current_value is not None and current_value >= required_value:
             print("Achievement wird vergeben")
             return True, achievementID
-        

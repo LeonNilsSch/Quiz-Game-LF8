@@ -65,10 +65,20 @@ class QuestionRepository:
         
         return "Question created! :)"
     
-    def fill_right_or_wrong(self,playerID,gameID,questionID,right:bool):
+    def update_question(self, questionID,input_field, user_change):
+        self.cursor.execute(f""" UPDATE Question SET {input_field} = ? WHERE questionID = ? """, (user_change, questionID))
+        self.con.commit()  
+        return f"Question {questionID} was changed"
+         
+    def delete_question(self, questionID):
+        self.cursor.execute("""DELETE FROM Question WHERE questionID = ?""", (questionID,))
+        self.con.commit() 
+    
+    def fill_right_or_wrong(self,playerID,gameID,questionID,right):
         self.cursor.execute("""
-                                INSERT INTO right_or_wrong(playerID,gameID,questionID,right) VALUES(?,?,?,?)
+                                INSERT INTO right_or_wrong(playerID,gameID,questionID,answerCorrectly) VALUES(?,?,?,?)
                              """, (playerID,gameID,questionID,right))
+        self.con.commit()  
         return
     
     def get_question_points(self,questionId):

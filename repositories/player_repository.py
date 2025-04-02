@@ -48,17 +48,32 @@ class PlayerRepoisitory(DatabaseHelper):
         self.con.commit()  
         return
     
-    def change_player_name(self):
-        return
+    # def change_player_name(self):
+    #     return
     
-    def change_player_passwort(self):
-        return
+    # def change_player_passwort(self):
+    #     return
     
     def get_all_player_achievements(self,playerID):
         return self.get_value_from_table("Player_to_achievement", "achievementID", "playerID", playerID)
-    # def get_requierments(self):
-    #     self.cursor.execute("""ALTER TABLE Player ADD COLUMN playedGames INTEGER;""")
-    #     self.con.commit()
     
+    def get_correct_Questions_by_difficulty(self, playerID, difficulty):
+        self.cursor.execute("""SELECT COUNT(*) AS total_correct
+                                FROM right_or_wrong rw
+                                JOIN Question q ON rw.questionID = q.questionID
+                                JOIN Difficulty d ON q.difficultyID = d.difficultyID
+                                JOIN Player p ON rw.playerID = p.playerID
+                                WHERE rw.answerCorrectly = TRUE
+                                AND d.name = ?
+                                AND p.playerID = ?;""", (difficulty ,playerID,))
+        rows = self.cursor.fetchone()
+        print(rows[0])
+        return rows[0]
+    
+    def update_correctDifficultyQuestions(self,update_difficulty, playerID, new_value):
+        self.cursor.execute(f"""UPDATE Player SET {update_difficulty} = ? WHERE playerID = ?""",(new_value,playerID,))
+        self.con.commit() 
+        print(f"Bei Spieler {playerID} wurde {update_difficulty} geupdatet")
+
     
     

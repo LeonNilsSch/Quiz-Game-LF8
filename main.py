@@ -18,10 +18,12 @@ rq.fill_game_question(ids, 1)
 questionid=rq.get_random_questionID(1)
 rq.get_question(questionid)
 rq.get_correct_answer(questionid)
+# rq.fill_right_or_wrong(1,1,1,True)
 print(rq.get_question_points(questionid))
 
 d = DifficultyRepository()
 difficultyid = d.get_difficultyId_from_questionId(questionid)
+print(difficultyid)
 d.get_difficulty_points(difficultyid)
 d.get_all_difficulties()
 
@@ -35,9 +37,11 @@ print(player_achievements)
 check_achievment=p.receive_achievement(requierments,2,player_achievements)
 
 if check_achievment:
-    a.fill_player_to_achievments(p.player_id,check_achievment[0],check_achievment[1], achievementName)
+    a.fill_player_to_achievments(p.player_id,check_achievment[1],check_achievment[0], achievementName)
 print(pr.get_player_achievments(1))
 
+new_value_correctanswer= pr.get_correct_Questions_by_difficulty(1, "medium")
 
+pr.update_correctDifficultyQuestions("correctMediumQuestions", 1, new_value_correctanswer)
 
 

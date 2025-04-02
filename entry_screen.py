@@ -1,5 +1,6 @@
 import tkinter as tk
-from login import login_screen  # Importiere die Login-GUI
+from tkinter import ttk
+from login_screen import login_screen  # Importiere die Login-GUI
 
 # Funktion, die nach erfolgreichem Login das Spiel startet
 def start_game():
@@ -14,40 +15,38 @@ def open_login():
 main_screen = tk.Tk()
 main_screen.title("Willkommen zum Quiz-Game")
 main_screen.geometry("800x600")
-main_screen.configure(bg="#2e2e2e")  # Hintergrundfarbe angepasst
+main_screen.configure(bg="#1e1e1e")  # Noch dunkleres Grau für besseren Kontrast
 
-# Styling
-label_font = ("Helvetica", 16, "bold")
-btn_font = ("Helvetica", 14, "bold")
-btn_bg = "#6e6e6e"
-btn_fg = "white"
-btn_hover_bg = "#1e1e1e"
-btn_border_width = 0
+# Globale Styles für macOS-Kompatibilität
+main_screen.option_add('*TButton*background', '#222222')
+main_screen.option_add('*TButton*foreground', '#FFFFFF')
+main_screen.option_add('*TButton*borderwidth', 1)
+main_screen.option_add('*TButton.padding', [10, 5])
+main_screen.option_add('*TLabel*foreground', '#FFFFFF')
+main_screen.option_add('*TLabel*background', '#1e1e1e')
+
+# Schriftarten für Labels und Buttons
+label_font = ("Helvetica", 16, "bold")  # Schriftart für Labels
+btn_font = ("Helvetica", 14, "bold")  # Schriftart für Buttons
 
 # Frame zum Zentrieren des Inhalts
-frame = tk.Frame(main_screen, bg="#2e2e2e")
+frame = ttk.Frame(main_screen)
 frame.pack(expand=True, fill="both")
 
 # Innerer Frame zum Mitten Ausrichten
-inner_frame = tk.Frame(frame, bg="#2e2e2e")
+inner_frame = ttk.Frame(frame)
 inner_frame.place(relx=0.5, rely=0.5, anchor="center")
 
 # Titel-Label
-tk.Label(inner_frame, text="Willkommen zum Quiz-Game", font=label_font, fg="white", bg="#2e2e2e").pack(pady=20)
+ttk.Label(inner_frame, text="Willkommen zum Quiz-Game", font=label_font).pack(pady=20)
 
-# Spielen-Button
-btn_play = tk.Button(inner_frame, text="Spielen", font=btn_font, bg=btn_bg, fg=btn_fg, relief="flat", bd=btn_border_width, command=open_login)
-btn_play.pack(pady=20, ipadx=20, ipady=10)
+# Style für macOS anpassen (kein Hover-Effekt)
+style = ttk.Style()
+style.configure("Custom.TButton", background="#222222", foreground="#FFFFFF", borderwidth=1)
 
-# Button Hover-Effekt
-def on_enter(event, button):
-    button.config(bg=btn_hover_bg)
-
-def on_leave(event, button):
-    button.config(bg=btn_bg)
-
-btn_play.bind("<Enter>", lambda event, button=btn_play: on_enter(event, button))
-btn_play.bind("<Leave>", lambda event, button=btn_play: on_leave(event, button))
+# Spielen-Button (jetzt statisch ohne Hover-Änderung)
+btn_play = ttk.Button(inner_frame, text="Spielen", command=open_login, style="Custom.TButton")
+btn_play.pack(pady=20, ipadx=20, ipady=1)
 
 # Start der GUI
 main_screen.mainloop()
