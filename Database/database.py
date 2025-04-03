@@ -6,7 +6,7 @@ conn = sqlite3.connect("Database/database.db")
 cursor = conn.cursor()
 
 # JSON-Datei laden
-with open("tests/test_fragen.json", "r", encoding="utf-8") as f:
+with open("Database/test_fragen.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
 # Category und Difficulty zwischenspeichern (damit IDs nicht doppelt gespeichert werden)
@@ -20,7 +20,7 @@ for entry in data["results"]:
 
     # Kategorie einfügen (falls noch nicht vorhanden)
     if category_name not in category_cache:
-        cursor.execute("INSERT OR IGNORE INTO Category (name) VALUES (?)", (category_name,))
+        cursor.execute("INSERT OR IGNORE INTO Category (categoryName) VALUES (?)", (category_name,))
         category_cache[category_name] = cursor.lastrowid
 
     # Schwierigkeitsgrad einfügen (falls noch nicht vorhanden)
@@ -31,23 +31,23 @@ for entry in data["results"]:
             Points = 2
         else:
             Points = 3
-        cursor.execute("INSERT OR IGNORE INTO Difficulty (name, Points) VALUES (?, ?)", 
+        cursor.execute("INSERT OR IGNORE INTO Difficulty (difficultyName, difficultyPoints) VALUES (?, ?)", 
                        (difficulty_name, Points))  # Punkte anpassen
         difficulty_cache[difficulty_name] = cursor.lastrowid
 
     # Kategorie- und Schwierigkeits-ID abrufen
-    cursor.execute("SELECT CategoryID FROM Category WHERE name = ?", (category_name,))
+    cursor.execute("SELECT CategoryID FROM Category WHERE categoryName = ?", (category_name,))
     category_id = cursor.fetchone()[0]
 
-    cursor.execute("SELECT DifficultyID FROM Difficulty WHERE name = ?", (difficulty_name,))
+    cursor.execute("SELECT DifficultyID FROM Difficulty WHERE difficultyName = ?", (difficulty_name,))
     difficulty_id = cursor.fetchone()[0]
 
     # Frage in die Datenbank einfügen
-    incorrects = entry["incorrect_answers"]
+    incorrects = entry["incorrectAnswers"]
     cursor.execute("""
-        INSERT INTO Question (categoryID, difficultyID, question, correct_answer, incorrect_answers1, incorrect_answers2, incorrect_answers3)
+        INSERT INTO Question (categoryID, difficultyID, question, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3)
         VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (category_id, difficulty_id, entry["question"], entry["correct_answer"], 
+    """, (category_id, difficulty_id, entry["question"], entry["correctAnswer"], 
           incorrects[0] if len(incorrects) > 0 else None,
           incorrects[1] if len(incorrects) > 1 else None,
           incorrects[2] if len(incorrects) > 2 else None))

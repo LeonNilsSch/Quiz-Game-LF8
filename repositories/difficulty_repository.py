@@ -5,10 +5,10 @@ class DifficultyRepository(DatabaseHelper):
         return self.get_value_from_table("Question", "difficultyID", "questionID", questionID)
 
     def get_difficulty_points(self, difficultyID):
-        return self.get_value_from_table("Difficulty", "points", "difficultyID", difficultyID)
+        return self.get_value_from_table("Difficulty", "difficultyPoints", "difficultyID", difficultyID)
 
-    def get_difficultyid_by_difficultyname(self, name):
-        return self.get_value_from_table("Difficulty", "difficultyID", "name", name)
+    def get_difficultyid_by_name(self, difficultyName):
+        return self.get_value_from_table("Difficulty", "difficultyID", "difficultyName", difficultyName)
     
     def get_all_difficulties(self):
         self.cursor.execute(""" 
@@ -21,7 +21,18 @@ class DifficultyRepository(DatabaseHelper):
     
     def update_points(self,new_points,difficultyID):
         self.cursor.execute(""" 
-        UPDATE Difficulty SET points = ? WHERE difficultyID = ?
+        UPDATE Difficulty SET difficultyPoints = ? WHERE difficultyID = ?
         """, (new_points,difficultyID,))
         self.con.commit()
+        
+    def difficulties(self):
+        return
+    
+    def update_difficulties(self):
+        return
+    
+    def delete_difficulties(self, diffficultyID):
+        self.cursor.execute(""" DELETE FROM Difficulty WHERE DifficultyID = ?""", (DifficultyID,))
+        self.con.commit()
+        return
         
