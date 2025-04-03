@@ -1,12 +1,12 @@
 import sqlite3
 from repositories.question_repository import QuestionRepository
-from question import Question
+from src.question import Question
 #from repositories.game_repository import GameRepository
 from repositories.category_repository import CatecoryRepository
 from repositories.difficulty_repository import DifficultyRepository
 from repositories.achievment_repository import AchievmentRepository
 from repositories.player_repository import PlayerRepoisitory
-from player import Player
+from src.player import Player
 
 category_repo = CatecoryRepository()
 categoryID = category_repo.get_category_id_by_name("Politics")
