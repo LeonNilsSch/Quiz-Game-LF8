@@ -10,7 +10,7 @@ from selection_screen import mode_screen  # Importiere mode_screen aus selection
 def category_screen():
     root = tk.Tk()
     root.title("Wähle die Kategorie")
-    root.geometry("800x600")
+    root.geometry("1200x800")
     root.configure(bg="#2e2e2e")  # Standard-Hintergrundfarbe
 
     # Schriftarten und Farben
