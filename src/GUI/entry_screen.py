@@ -11,7 +11,7 @@ def open_category_screen():
 def entry_screen():
     global main_screen
     main_screen = tk.Tk()
-    main_screen.title("Willkommen zum Quiz-Game")
+    main_screen.title("Hauptmenü")
     main_screen.geometry("800x600")
     main_screen.configure(bg="#2e2e2e")  # Standard-Hintergrundfarbe
 
@@ -26,12 +26,12 @@ def entry_screen():
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Titel-Label
-    tk.Label(frame, text="Willkommen zum Quiz-Game", font=label_font, fg="white", bg="#2e2e2e").pack(pady=20)
+    tk.Label(frame, text="Willkommen im Quiz-Spiel!", font=label_font, fg="white", bg="#2e2e2e").pack(pady=20)
 
     # Spielen-Button
     btn_play = tk.Button(
         frame,
-        text="Spielen",
+        text="Spiel starten",
         font=btn_font,
         bg=btn_bg,
         fg=btn_fg,
@@ -39,5 +39,17 @@ def entry_screen():
         command=open_category_screen
     )
     btn_play.pack(pady=20, ipadx=20, ipady=10)
+
+    # Beenden-Button
+    btn_exit = tk.Button(
+        frame,
+        text="Beenden",
+        font=btn_font,
+        bg=btn_bg,
+        fg=btn_fg,
+        relief="flat",
+        command=main_screen.destroy
+    )
+    btn_exit.pack(pady=20, ipadx=20, ipady=10)
 
     main_screen.mainloop()

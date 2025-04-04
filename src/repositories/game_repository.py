@@ -1,32 +1,37 @@
 import datetime
-import sqlite3
 import uuid
 from repositories.database_helper import DatabaseHelper
 
 class GameRepository(DatabaseHelper):
-    def create_game(self):
+    def create_game(self, creatorID):
+        con = self.get_connection()
+        cursor = con.cursor()
         date = datetime.datetime.now()
-        date_form= date.strftime("%c")
+        dateForm = date.strftime("%c")
         
-        game_code = str(uuid.uuid4())[:8]  # Kürzerer Code für das Spiel
+        game_key = str(uuid.uuid4())[:8]  # Kürzerer Code für das Spiel
 
-        self.cursor.execute("INSERT INTO Game (date, game_code) VALUES (?, ?)", 
-               (date_form, game_code))
-        self.con.commit()  
-        return game_code
+        # Verwende den korrekten Spaltennamen "gameDate"
+        cursor.execute("INSERT INTO Game (gameDate, gameKey, winnerID) VALUES (?, ?, ?)", 
+               (dateForm, game_key, creatorID))
+        con.commit()
+        con.close()
+        return game_key
     
-    def get_gameID(self,game_code):
-        return self.get_value_from_table("Game", "gameID", "game_code", game_code)
+    def get_gameID(self, gameCode):
+        return self.get_value_from_table("Game", "gameID", "gameKey", gameCode)
     
-    def fill_player_of_game(self,playerID,GameID):
-        self.cursor.execute("INSERT INTO Player_of_Game (playerID, gameID) VALUES (?, ?)", 
-               (playerID, GameID))
-        self.con.commit()
+    def fill_player_of_game(self, playerID, gameID):
+        con = self.get_connection()
+        cursor = con.cursor()
+        cursor.execute("INSERT INTO PlayerOfGame (playerID, gameID) VALUES (?, ?)", 
+               (playerID, gameID))
+        con.commit()
+        con.close()
         
     def get_player_score_ingame(self):
         return
-    
-        
-    
-   
-    
+
+
+
+
