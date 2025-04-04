@@ -12,7 +12,7 @@ def entry_screen():
     global main_screen
     main_screen = tk.Tk()
     main_screen.title("Hauptmenü")
-    main_screen.geometry("800x600")
+    main_screen.geometry("1200x800")
     main_screen.configure(bg="#2e2e2e")  # Standard-Hintergrundfarbe
 
     # Schriftarten und Farben

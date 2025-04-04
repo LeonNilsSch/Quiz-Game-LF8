@@ -33,7 +33,7 @@ def login_screen():
 
     login_screen_window = tk.Tk()
     login_screen_window.title("Login System")
-    login_screen_window.geometry("800x600")
+    login_screen_window.geometry("1200x800")
     login_screen_window.configure(bg="#2e2e2e")  # Standard-Hintergrundfarbe
 
     # Schriftarten und Farben

@@ -37,7 +37,7 @@ def create_account_screen():
 
     createacc_window = tk.Tk()
     createacc_window.title("Account erstellen")
-    createacc_window.geometry("800x600")
+    createacc_window.geometry("1200x800")
     createacc_window.configure(bg="#2e2e2e")  # Standard-Hintergrundfarbe
 
     # Schriftarten und Farben
