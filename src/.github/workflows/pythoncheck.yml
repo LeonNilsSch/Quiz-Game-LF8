@@ -1,5 +1,4 @@
-name: Python Check
-
+name: Lint, Format & Test Code
 
 on:
   push:
@@ -9,41 +8,64 @@ on:
     branches:
       - main
 
-
 jobs:
-  test:
+  lint-format:
     runs-on: ubuntu-latest
 
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensures full history for diff checks
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'  # Adjust the Python version as needed
-
-
-    # - name: Install Dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements.txt
-
-
-    - name: Run Tests
-      run: |
-        python -m unittest discover tests/  # Or change 'pytest' to 'python -m unittest discover' if using unittest
-so your job can access it
-      - uses: actions/checkout@v4
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Install dependencies
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Black Formatter
+        run: |
+          black --line-length 88 .
+
+      - name: Run Pylint Linter
+        run: pylint $(git ls-files '*.py')
+
+      # - name: Run Tests
+      #   run: |
+      #     python -m unittest discover tests/
+
+      - name: Check for formatting changes
+        id: check_diff
+        run: |
+          if git diff --quiet; then
+            echo "SKIP=true" >> $GITHUB_ENV
+          else
+            echo "SKIP=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create and Push to a New Branch for Formatting
+        if: env.SKIP != 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout -B black-auto-format origin/main  # Always base on latest main
+          git add .
+          git diff --quiet && echo "No changes to commit" || git commit -m "Auto-format code with Black"
+          git push origin black-auto-format --force
+
+      - name: Create Pull Request
+        if: env.SKIP != 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: "Auto-format code with Black"
+          body: "This PR contains automatic formatting changes made by Black."
+          branch: black-auto-format
+          base: main
+          labels: "auto-format"
+          draft: false

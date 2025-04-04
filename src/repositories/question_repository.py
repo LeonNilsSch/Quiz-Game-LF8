@@ -1,16 +1,7 @@
 import sqlite3
 import random
-
-class QuestionRepository:
-    def __init__(self, db="Database/database.db"):
-        # Prüfen, ob db eine Connection oder ein String-Pfad ist
-        if isinstance(db, str):
-            self.con = sqlite3.connect(db)
-        else:
-            self.con = db  # Falls schon eine Connection übergeben wurde
-
-        self.cursor = self.con.cursor()
-
+from repositories.database_helper import DatabaseHelper
+class QuestionRepository(DatabaseHelper):
     def get_questionIDs_with_Categorys(self, categoryid):
         """
         Holt alle Frage-IDs für eine bestimmte Kategorie.
@@ -27,20 +18,20 @@ class QuestionRepository:
 
     def fill_game_question(self, questionids, gameid):
         """
-        Füllt die Tabelle Game_Question mit den Frage-IDs für ein bestimmtes Spiel.
+        Füllt die Tabelle GameQuestion mit den Frage-IDs für ein bestimmtes Spiel.
         """
         for i in questionids:
             self.cursor.execute(""" 
-            INSERT INTO Game_Question(gameID, questionID, played) VALUES (?, ?, 0)
+            INSERT INTO GameQuestion(gameID, questionID, played) VALUES (?, ?, 0)
             """, (gameid, i,))
         self.con.commit()   
 
     def get_random_questionID(self, gameID):
         """
-        Holt eine zufällige Frage-ID aus der Tabelle Game_Question, die noch nicht gespielt wurde.
+        Holt eine zufällige Frage-ID aus der Tabelle GameQuestion, die noch nicht gespielt wurde.
         """
         self.cursor.execute(""" 
-        SELECT questionID FROM Game_Question WHERE played = 0 AND gameID = ?
+        SELECT questionID FROM GameQuestion WHERE played = 0 AND gameID = ?
         """, (gameID,))
         rows = self.cursor.fetchall()
         
@@ -54,7 +45,7 @@ class QuestionRepository:
         Holt die Frage und die dazugehörigen Antworten aus der Datenbank.
         """
         self.cursor.execute(""" 
-        SELECT question, correct_answer, incorrect_answers1, incorrect_answers2, incorrect_answers3
+        SELECT question, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3
         FROM Question
         WHERE questionID = ?
         """, (questionID,))
@@ -62,11 +53,11 @@ class QuestionRepository:
         
         if row:
             return {
-                "question_text": row[0],
-                "correct_answer": row[1],
-                "incorrect_answer1": row[2],
-                "incorrect_answer2": row[3],
-                "incorrect_answer3": row[4]
+                "questionText": row[0],
+                "correctAnswer": row[1],
+                "incorrectAnswer1": row[2],
+                "incorrectAnswer2": row[3],
+                "incorrectAnswer3": row[4]
             }
         return None  # Gibt None zurück, wenn keine Frage gefunden wurde
 
@@ -75,31 +66,26 @@ class QuestionRepository:
         Holt die korrekte Antwort für eine bestimmte Frage-ID.
         """
         self.cursor.execute(""" 
-        SELECT correct_answer FROM Question WHERE questionID = ?
+        SELECT correctAnswer FROM Question WHERE questionID = ?
         """, (questionID,))
         row = self.cursor.fetchone()
         
         return row[0] if row else None
 
-    def create_question(self, question, categoryID, difficultyID, correct_answer, incorrect_answer1, incorrect_answer2, incorrect_answer3):
+    def create_question(self, question, categoryID, difficultyID, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3):
         """
         Erstellt eine neue Frage in der Datenbank.
         """
         self.cursor.execute(""" 
-        INSERT INTO Question(question, categoryID, difficultyID, correct_answer, incorrect_answers1, incorrect_answers2, incorrect_answers3) 
+        INSERT INTO Question(question, categoryID, difficultyID, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3) 
         VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (question, categoryID, difficultyID, correct_answer, incorrect_answer1, incorrect_answer2, incorrect_answer3))
+        """, (question, categoryID, difficultyID, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3))
         self.con.commit()   
         
         return "Question created! :)"
     
-    def update_question(self, questionID, input_field, user_change):
-        """
-        Aktualisiert ein bestimmtes Feld einer Frage in der Datenbank.
-        """
-        self.cursor.execute(f""" UPDATE Question SET {input_field} = ? WHERE questionID = ? """, (user_change, questionID))
-        self.con.commit()  
-        return f"Question {questionID} was changed"
+    def update_question(self, questionID, inputField, userChange):
+        self.update_fieldValue("Question", inputField, userChange, questionID, "questionID")
          
     def delete_question(self, questionID):
         """
@@ -110,10 +96,10 @@ class QuestionRepository:
     
     def fill_right_or_wrong(self, playerID, gameID, questionID, right):
         """
-        Füllt die Tabelle right_or_wrong mit den Spielerantworten.
+        Füllt die Tabelle RightOrWrong mit den Spielerantworten.
         """
         self.cursor.execute("""
-                                INSERT INTO right_or_wrong(playerID,gameID,questionID,answerCorrectly) VALUES(?,?,?,?)
+                                INSERT INTO RightOrWrong(playerID,gameID,questionID,answerCorrectly) VALUES(?,?,?,?)
                              """, (playerID, gameID, questionID, right))
         self.con.commit()  
         return
@@ -123,13 +109,13 @@ class QuestionRepository:
         Holt die Punkte für eine bestimmte Frage basierend auf der Schwierigkeit.
         """
         self.cursor.execute(""" 
-        SELECT d.difficultyID, d.points
+        SELECT d.difficultyID, d.difficultyPoints
         FROM Difficulty d
         JOIN Question q ON d.difficultyID = q.difficultyID
         WHERE q.questionID = ?
         """, (questionId,))
         
-        rows = self.cursor.fetchall()
-        return [row[0] for row in rows]
+        rows = self.cursor.fetchone()
+        return rows
 
 
