@@ -3,6 +3,7 @@ import requests  # Für API-Anfragen
 from tkinter import simpledialog, messagebox
 from gameplay_screen import GameplayScreen  # Importiere den GameplayScreen
 
+
 # Funktion zum Starten des Spiels mit der Auswahl
 def start_game_mode(mode, root):
     """
@@ -16,21 +17,31 @@ def start_game_mode(mode, root):
     else:
         print(f"Unbekannter Modus: {mode}")
 
+
 def create_multiplayer_game():
     try:
         # API-Aufruf, um ein neues Multiplayer-Spiel zu erstellen
-        response = requests.post("http://127.0.0.1:5000/create_game", json={"creatorID": 1})  # Beispiel: creatorID = 1
+        response = requests.post(
+            "http://127.0.0.1:5000/create_game", json={"creatorID": 1}
+        )  # Beispiel: creatorID = 1
         if response.status_code == 201:
             game_data = response.json()
             game_key = game_data.get("game_key")
             game_id = game_data.get("gameID")
-            messagebox.showinfo("Spiel erstellt", f"Spiel erstellt!\nGame Key: {game_key}")
-            print(f"Multiplayer-Spiel erstellt: Game Key: {game_key}, Game ID: {game_id}")
+            messagebox.showinfo(
+                "Spiel erstellt", f"Spiel erstellt!\nGame Key: {game_key}"
+            )
+            print(
+                f"Multiplayer-Spiel erstellt: Game Key: {game_key}, Game ID: {game_id}"
+            )
         else:
             error_message = response.json().get("error", "Unbekannter Fehler")
-            messagebox.showerror("Fehler", f"Fehler beim Erstellen des Spiels: {error_message}")
+            messagebox.showerror(
+                "Fehler", f"Fehler beim Erstellen des Spiels: {error_message}"
+            )
     except Exception as e:
         messagebox.showerror("Fehler", f"Fehler beim Verbinden mit dem Server: {e}")
+
 
 def join_multiplayer_game():
     # Dialog zur Eingabe des Game Keys
@@ -40,15 +51,23 @@ def join_multiplayer_game():
 
     try:
         # API-Aufruf, um einem bestehenden Spiel beizutreten
-        response = requests.post("http://127.0.0.1:5000/join_game", json={"game_key": game_key, "playerID": 1})  # Beispiel: playerID = 1
+        response = requests.post(
+            "http://127.0.0.1:5000/join_game",
+            json={"game_key": game_key, "playerID": 1},
+        )  # Beispiel: playerID = 1
         if response.status_code == 200:
-            messagebox.showinfo("Beigetreten", "Du bist dem Spiel erfolgreich beigetreten!")
+            messagebox.showinfo(
+                "Beigetreten", "Du bist dem Spiel erfolgreich beigetreten!"
+            )
             print(f"Spiel beigetreten: Game Key: {game_key}")
         else:
             error_message = response.json().get("error", "Unbekannter Fehler")
-            messagebox.showerror("Fehler", f"Fehler beim Beitreten zum Spiel: {error_message}")
+            messagebox.showerror(
+                "Fehler", f"Fehler beim Beitreten zum Spiel: {error_message}"
+            )
     except Exception as e:
         messagebox.showerror("Fehler", f"Fehler beim Verbinden mit dem Server: {e}")
+
 
 def multiplayer_screen():
     multiplayer_window = tk.Toplevel()
@@ -61,7 +80,13 @@ def multiplayer_screen():
     btn_bg = "#444444"
     btn_fg = "#DDDDDD"
 
-    tk.Label(multiplayer_window, text="Multiplayer Optionen", font=label_font, fg="white", bg="#2e2e2e").pack(pady=20)
+    tk.Label(
+        multiplayer_window,
+        text="Multiplayer Optionen",
+        font=label_font,
+        fg="white",
+        bg="#2e2e2e",
+    ).pack(pady=20)
 
     btn_create = tk.Button(
         multiplayer_window,
@@ -70,7 +95,7 @@ def multiplayer_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=create_multiplayer_game
+        command=create_multiplayer_game,
     )
     btn_create.pack(pady=10, ipadx=20, ipady=10)
 
@@ -81,9 +106,10 @@ def multiplayer_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=join_multiplayer_game
+        command=join_multiplayer_game,
     )
     btn_join.pack(pady=10, ipadx=20, ipady=10)
+
 
 def mode_screen():
     root = tk.Tk()
@@ -102,7 +128,13 @@ def mode_screen():
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Modus-Auswahl Label
-    tk.Label(frame, text="Wählen Sie den Spielmodus", font=label_font, fg="white", bg="#2e2e2e").pack(pady=20)
+    tk.Label(
+        frame,
+        text="Wählen Sie den Spielmodus",
+        font=label_font,
+        fg="white",
+        bg="#2e2e2e",
+    ).pack(pady=20)
 
     # Buttons für Spielmodi
     btn_singleplayer = tk.Button(
@@ -112,7 +144,9 @@ def mode_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=lambda: start_game_mode("Singleplayer", root)  # Ruft den Singleplayer-Modus auf
+        command=lambda: start_game_mode(
+            "Singleplayer", root
+        ),  # Ruft den Singleplayer-Modus auf
     )
     btn_singleplayer.pack(pady=30, ipadx=40, ipady=20)
 
@@ -123,7 +157,9 @@ def mode_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=lambda: start_game_mode("Multiplayer", root)  # Ruft den Multiplayer-Modus auf
+        command=lambda: start_game_mode(
+            "Multiplayer", root
+        ),  # Ruft den Multiplayer-Modus auf
     )
     btn_multiplayer.pack(pady=30, ipadx=40, ipady=20)
 

@@ -2,10 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 from category_screen import category_screen  # Importiere category_screen.py
 
+
 # Funktion, um die Kategorieauswahl zu öffnen
 def open_category_screen():
     main_screen.destroy()  # Schließt den Entry Screen
     category_screen()  # Öffnet die Kategorieauswahl
+
 
 # Hauptbildschirm (Entry Screen)
 def entry_screen():
@@ -26,7 +28,13 @@ def entry_screen():
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Titel-Label
-    tk.Label(frame, text="Willkommen im Quiz-Spiel!", font=label_font, fg="white", bg="#2e2e2e").pack(pady=20)
+    tk.Label(
+        frame,
+        text="Willkommen im Quiz-Spiel!",
+        font=label_font,
+        fg="white",
+        bg="#2e2e2e",
+    ).pack(pady=20)
 
     # Spielen-Button
     btn_play = tk.Button(
@@ -36,7 +44,7 @@ def entry_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=open_category_screen
+        command=open_category_screen,
     )
     btn_play.pack(pady=20, ipadx=20, ipady=10)
 
@@ -48,7 +56,7 @@ def entry_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=main_screen.destroy
+        command=main_screen.destroy,
     )
     btn_exit.pack(pady=20, ipadx=20, ipady=10)
 

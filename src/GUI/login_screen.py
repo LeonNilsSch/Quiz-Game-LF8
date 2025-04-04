@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 from entry_screen import entry_screen
 import sqlite3
 
+
 # Login-Funktion
 def login():
     username = entry_username.get()
@@ -12,7 +13,10 @@ def login():
     con = sqlite3.connect("./Database/database.db")
     cursor = con.cursor()
 
-    cursor.execute("SELECT * FROM Player WHERE Playername = ? AND playerPassword = ?", (username, password))
+    cursor.execute(
+        "SELECT * FROM Player WHERE Playername = ? AND playerPassword = ?",
+        (username, password),
+    )
     user = cursor.fetchone()
     con.close()
 
@@ -22,10 +26,12 @@ def login():
     else:
         messagebox.showerror("Fehler", "Falscher Benutzername oder Passwort.")
 
+
 # Funktion, um den Entry Screen zu öffnen
 def open_entry_screen():
     login_screen_window.destroy()
     entry_screen()
+
 
 # Login-GUI
 def login_screen():
@@ -49,13 +55,21 @@ def login_screen():
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Benutzername
-    tk.Label(frame, text="Benutzername:", font=label_font, fg="white", bg="#2e2e2e").pack(pady=5)
-    entry_username = tk.Entry(frame, font=label_font, bg=entry_bg, fg=entry_fg, relief="flat")
+    tk.Label(
+        frame, text="Benutzername:", font=label_font, fg="white", bg="#2e2e2e"
+    ).pack(pady=5)
+    entry_username = tk.Entry(
+        frame, font=label_font, bg=entry_bg, fg=entry_fg, relief="flat"
+    )
     entry_username.pack(pady=5)
 
     # Passwort
-    tk.Label(frame, text="Passwort:", font=label_font, fg="white", bg="#2e2e2e").pack(pady=5)
-    entry_password = tk.Entry(frame, font=label_font, bg=entry_bg, fg=entry_fg, show="*", relief="flat")
+    tk.Label(frame, text="Passwort:", font=label_font, fg="white", bg="#2e2e2e").pack(
+        pady=5
+    )
+    entry_password = tk.Entry(
+        frame, font=label_font, bg=entry_bg, fg=entry_fg, show="*", relief="flat"
+    )
     entry_password.pack(pady=5)
 
     # Login-Button
@@ -66,7 +80,7 @@ def login_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=login
+        command=login,
     )
     btn_login.pack(pady=10, ipadx=20, ipady=10)
 
@@ -74,6 +88,7 @@ def login_screen():
     def open_create_account_screen():
         login_screen_window.destroy()
         from createacc_screen import create_account_screen  # Dynamischer Import
+
         create_account_screen()
 
     btn_create_account = tk.Button(
@@ -83,11 +98,12 @@ def login_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=open_create_account_screen
+        command=open_create_account_screen,
     )
     btn_create_account.place(relx=0.9, rely=0.95, anchor="se")
 
     login_screen_window.mainloop()
+
 
 if __name__ == "__main__":
     login_screen()

@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import sqlite3
 from login_screen import login_screen
 
+
 def create_account_screen():
     def create_account():
         username = entry_username.get()
@@ -27,7 +28,10 @@ def create_account_screen():
             con.close()
             return
 
-        cursor.execute("INSERT INTO Player (Playername, playerPassword) VALUES (?, ?)", (username, password))
+        cursor.execute(
+            "INSERT INTO Player (Playername, playerPassword) VALUES (?, ?)",
+            (username, password),
+        )
         con.commit()
         con.close()
 
@@ -53,18 +57,30 @@ def create_account_screen():
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
     # Benutzername
-    tk.Label(frame, text="Benutzername:", font=label_font, fg="white", bg="#2e2e2e").pack(pady=5)
-    entry_username = tk.Entry(frame, font=label_font, bg=entry_bg, fg=entry_fg, relief="flat")
+    tk.Label(
+        frame, text="Benutzername:", font=label_font, fg="white", bg="#2e2e2e"
+    ).pack(pady=5)
+    entry_username = tk.Entry(
+        frame, font=label_font, bg=entry_bg, fg=entry_fg, relief="flat"
+    )
     entry_username.pack(pady=5)
 
     # Passwort
-    tk.Label(frame, text="Passwort:", font=label_font, fg="white", bg="#2e2e2e").pack(pady=5)
-    entry_password = tk.Entry(frame, font=label_font, bg=entry_bg, fg=entry_fg, show="*", relief="flat")
+    tk.Label(frame, text="Passwort:", font=label_font, fg="white", bg="#2e2e2e").pack(
+        pady=5
+    )
+    entry_password = tk.Entry(
+        frame, font=label_font, bg=entry_bg, fg=entry_fg, show="*", relief="flat"
+    )
     entry_password.pack(pady=5)
 
     # Passwort bestätigen
-    tk.Label(frame, text="Passwort bestätigen:", font=label_font, fg="white", bg="#2e2e2e").pack(pady=5)
-    entry_confirm_password = tk.Entry(frame, font=label_font, bg=entry_bg, fg=entry_fg, show="*", relief="flat")
+    tk.Label(
+        frame, text="Passwort bestätigen:", font=label_font, fg="white", bg="#2e2e2e"
+    ).pack(pady=5)
+    entry_confirm_password = tk.Entry(
+        frame, font=label_font, bg=entry_bg, fg=entry_fg, show="*", relief="flat"
+    )
     entry_confirm_password.pack(pady=5)
 
     # Account erstellen Button
@@ -75,7 +91,7 @@ def create_account_screen():
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=create_account
+        command=create_account,
     )
     btn_create.pack(pady=10, ipadx=20, ipady=10)
 
