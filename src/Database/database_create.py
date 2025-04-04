@@ -1,24 +1,30 @@
 import sqlite3
+
 con = sqlite3.connect("Database/database.db")
 # Cursor-Objekt zum Ausführen von SQL-Befehlen
 cursor = con.cursor()
 
 # Beispiel-Tabelle erstellen
-cursor.execute("""
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS Category (
     categoryID INTEGER PRIMARY KEY AUTOINCREMENT,
     categoryName TEXT UNIQUE NOT NULL
 );
-""")
+"""
+)
 
-cursor.execute("""
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS Difficulty (
     difficultyID INTEGER PRIMARY KEY AUTOINCREMENT,
     difficultyName TEXT UNIQUE NOT NULL,
     difficultyPoints INTEGER NOT NULL
 );
-""")
-cursor.execute("""
+"""
+)
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS Question (
     questionID INTEGER PRIMARY KEY AUTOINCREMENT,
     categoryID INTEGER,
@@ -31,9 +37,11 @@ CREATE TABLE IF NOT EXISTS Question (
     FOREIGN KEY (categoryID) REFERENCES Category(categoryID),
     FOREIGN KEY (difficultyID) REFERENCES Difficulty(difficultyID)
 );
-""")
+"""
+)
 
-cursor.execute("""
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS Player (
     playerID INTEGER PRIMARY KEY AUTOINCREMENT,
     playerPassword TEXT,
@@ -45,9 +53,11 @@ CREATE TABLE IF NOT EXISTS Player (
     correctMediumQuestions INTEGER,
     correctEasyQuestions INTEGER
 );
-""")
+"""
+)
 
-cursor.execute("""
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS Game (
     gameID INTEGER PRIMARY KEY AUTOINCREMENT,
     winnerID INTEGER,
@@ -56,17 +66,21 @@ CREATE TABLE IF NOT EXISTS Game (
     FOREIGN KEY (winnerID) REFERENCES Player(playerID)
     
 );
-""")
+"""
+)
 
-cursor.execute("""
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS PlayerOfGame (
     gameID INTEGER,
     playerID INTEGER,
     FOREIGN KEY (playerID) REFERENCES Player(playerID),
     FOREIGN KEY (gameID) REFERENCES Game(gameID)
 );
-""")
-cursor.execute("""
+"""
+)
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS GameQuestion (
     gameID INTEGER,
     questionID INTEGER,
@@ -74,9 +88,11 @@ CREATE TABLE IF NOT EXISTS GameQuestion (
     FOREIGN KEY (questionID) REFERENCES Question(questionID),
     FOREIGN KEY (gameID) REFERENCES Game(gameID)
 );
-""")
+"""
+)
 
-cursor.execute("""
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS Achievement (
     achievementID INTEGER PRIMARY KEY AUTOINCREMENT,
     achievementName TEXT UNIQUE,
@@ -84,18 +100,22 @@ CREATE TABLE IF NOT EXISTS Achievement (
     conditionType TEXT,
     value INTEGER
 );
-""")
+"""
+)
 
-cursor.execute("""
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS PlayerToAchievement (
     playerID INTEGER,
     achievementID INTEGER,
     FOREIGN KEY (playerID) REFERENCES Player(playerID),
     FOREIGN KEY (achievementID) REFERENCES Achievement(achievementID)
 );
-""")
+"""
+)
 
-cursor.execute("""
+cursor.execute(
+    """
 CREATE TABLE IF NOT EXISTS RightOrWrong (
     playerID INTEGER,
     questionID INTEGER,
@@ -105,7 +125,8 @@ CREATE TABLE IF NOT EXISTS RightOrWrong (
     FOREIGN KEY (questionID) REFERENCES Question(questionID),
     FOREIGN KEY (gameID) REFERENCES Game(gameID)
 );
-""")
+"""
+)
 
 # Änderungen speichern und Verbindung schließen
 con.commit()
