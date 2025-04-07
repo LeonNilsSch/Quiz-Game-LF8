@@ -1,6 +1,6 @@
 import sqlite3
 
-con = sqlite3.connect("./Database/database.db")
+con = sqlite3.connect("src/Database/database.db")
 cursor = con.cursor()
 
 
@@ -26,37 +26,23 @@ class Player:
         self.correctMediumQuestions = correctMediumQuestions
         self.correctEasyQuestions = correctEasyQuestions
 
-    def insert_answer(self):
-        return
-
-    def get_playerID(self):
-        cursor.execute(
-            """ 
-            SELECT playerID FROM Player Where Name = ?""",
-            (self.name,),
-        )
-        return cursor.fetchall()
-
-    def create_user(self):
-        return
 
     def receive_achievement(
-        self, achievement_requirements, achievementID, player_achievements
-    ):
+    self, achievement_requirements, achievementID, player_achievements
+):
         requirement, required_value = achievement_requirements
 
-        # Sicherstellen, dass player_achievements eine Liste oder ein Tupel ist
-        if not isinstance(player_achievements, (list, tuple)):
-            player_achievements = [player_achievements]
+        # Wenn player_achievements None ist oder ein einzelner int-Wert, umwandeln
+        if player_achievements is None:
+            player_achievements = []
+        elif isinstance(player_achievements, int):
+            player_achievements = [(player_achievements,)]  # Ein einzelner int-Wert als Tuple in Liste umwandeln
+        elif isinstance(player_achievements, (list, tuple)):
+            # Falls es sich um eine Liste/Tupel handelt, aber keine Tupel, dann in (int,) umwandeln
+            player_achievements = [(ach,) if isinstance(ach, int) else ach for ach in player_achievements]
 
-        # Prüfen, ob player_achievements leer ist
-        if not player_achievements:
-            return  # Falls player_achievements leer ist, sofort zurückkehren
-
-        # Konvertiere die Liste von Tupeln in eine Liste von Zahlen (Achievement IDs)
-        achievement_ids = {
-            ach[0] for ach in player_achievements
-        }  # Set für schnellere Suche
+        # Nur gültige Einträge extrahieren
+        achievement_ids = {ach[0] for ach in player_achievements if isinstance(ach, (tuple, list)) and len(ach) > 0}
 
         # Falls Achievement bereits vorhanden ist, abbrechen
         if achievementID in achievement_ids:
@@ -67,3 +53,6 @@ class Player:
         if current_value is not None and current_value >= required_value:
             print("Achievement wird vergeben")
             return True, achievementID
+
+        return False
+

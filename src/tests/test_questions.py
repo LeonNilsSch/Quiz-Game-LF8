@@ -1,7 +1,12 @@
-import unittest
-import sqlite3
 import os
-from repositories.question_repository import QuestionRepository
+import sys
+import sqlite3
+import unittest
+#from ..repositories.database_helper import DatabaseHelper
+#from repositories.question_repository import QuestionRepository
+from src.repositories.question_repository import QuestionRepository
+
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 class TestQuestionsRepository(unittest.TestCase):

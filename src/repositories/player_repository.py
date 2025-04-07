@@ -3,28 +3,33 @@ import sqlite3
 
 
 class PlayerRepository(DatabaseHelper):
+    def __init__(self):
+        super().__init__()
+        self.player_id = None 
+        
     def get_playerID_by_name(self, playerName):
-        return self.get_value_from_table("Player", "playerID", "playerName", playerName)
+        
+        self.player_id = self.get_value_from_table("Player", "playerID", "playerName", playerName)
+        return self.player_id #brauchen wir hier den Return
+    def get_score(self):
+        return self.get_value_from_table("Player", "playerScore", "playerID", self.player_id)
 
-    def get_score(self, playerID):
-        return self.get_value_from_table("Player", "playerScore", "playerID", playerID)
+    def get_wins(self):
+        return self.get_value_from_table("Player", "playerWins", "playerID", self.player_id)
 
-    def get_wins(self, playerID):
-        return self.get_value_from_table("Player", "playerWins", "playerID", playerID)
-
-    def get_playedGames(self, playerID):
+    def get_playedGames(self):
         self.cursor.execute(
             """
                             SELECT COUNT(*) FROM GameOfPlayer
                             WHERE playerID = ?
                                     """,
-            (playerID,),
+            (self.player_id,),
         )
 
         anzahl_spiele = self.cursor.fetchone()[0]
         return anzahl_spiele
 
-    def get_player_achievments(self, playerID):
+    def get_player_achievments(self):
         self.cursor.execute(
             """
                             SELECT pta.achievementID, a.achievementID  
@@ -33,12 +38,12 @@ class PlayerRepository(DatabaseHelper):
                             ON a.achievementID = pta.achievementID
                             WHERE pta.playerID = ?
                             """,
-            (playerID,),
+            (self.player_id,),
         )
         rows = self.cursor.fetchall()
         return [row[0] for row in rows]
 
-    def get_playerID(self, playerName):
+    def get_playerID(self, playerName): #gibt es schon einmal, welche wollen wir genau benutzen?
         self.get_value_from_table("Player", "playerID", "playerName", playerName)
 
     def create_user(self, playerName, playerPassword):
@@ -52,34 +57,34 @@ class PlayerRepository(DatabaseHelper):
         self.con.commit()
         return
 
-    def delete_user(self, playerID):
+    def delete_user(self, playerID): # es kann eine beliebe PlayerID ausgewählt werden
         self.cursor.execute("""DELETE FROM Player WHERE playerID = ?""", (playerID,))
         self.con.commit()
         return
 
-    def get_all_player_achievements(self, playerID):
+    def get_all_player_achievements(self):
         return self.get_value_from_table(
-            "PlayerToAchievement", "achievementID", "playerID", playerID
+            "PlayerToAchievement", "achievementID", "playerID", self.player_id
         )
 
-    def get_correct_Questions_by_difficulty(self, playerID, difficultyName):
+    def get_correct_question_total_points(self,gameID):
         self.cursor.execute(
-            """SELECT COUNT(*) AS total_correct
-                                FROM RightOrWrong rw
-                                JOIN Question q ON rw.questionID = q.questionID
-                                JOIN Difficulty d ON q.difficultyID = d.difficultyID
-                                JOIN Player p ON rw.playerID = p.playerID
-                                WHERE rw.answerCorrectly = TRUE
-                                AND d.difficultyName = ?
-                                AND p.playerID = ?;""",
+            """SELECT SUM(d.difficultyPoints) AS total_points
+                FROM RightOrWrong rw
+                JOIN GameQuestion gq ON rw.gameID = gq.gameID AND rw.questionID = gq.questionID
+                JOIN Question q ON q.questionID = gq.questionID
+                JOIN Difficulty d ON q.difficultyID = d.difficultyID
+                WHERE rw.playerID = ? AND rw.gameID = ? AND rw.answerCorrectly = 1;
+                """
             (
-                difficultyName,
-                playerID,
+                self.player_id,
+                gameID
             ),
         )
         rows = self.cursor.fetchone()
         print(rows[0])
         return rows[0]
+    
 
     # def update_playerField(self,updateField, playerID, newValue):
     #     self.update_fieldValue("Player", updateField, newValue, playerID, "playerID")

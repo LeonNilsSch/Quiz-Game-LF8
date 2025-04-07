@@ -2,6 +2,7 @@ from repositories.database_helper import DatabaseHelper
 
 
 class AchievmentRepository(DatabaseHelper):
+    # keine Init, da es keinen Nutzen dafür gibt, da es keine durchgehed gleiche AchievementID hier gibt, sonder diese immer Wechseln kann
     def get_achievment_name(self, achievementID):
         return self.get_value_from_table(
             "Achievement", "achievementName", "achievementID", achievementID
@@ -17,10 +18,6 @@ class AchievmentRepository(DatabaseHelper):
             )
             self.con.commit()
             print("You have achieved a new achievements. Its " + achievementName + ".")
-
-    # def get_requierments(self):
-    #     self.cursor.execute("""ALTER TABLE Achievement ADD COLUMN requirements TEXT;""")
-    #     self.con.commit()
 
     def create_new_achievments(self, achievementName, points, conditionType, value):
         self.cursor.execute(
