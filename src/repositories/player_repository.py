@@ -83,3 +83,21 @@ class PlayerRepository(DatabaseHelper):
 
     # def update_playerField(self,updateField, playerID, newValue):
     #     self.update_fieldValue("Player", updateField, newValue, playerID, "playerID")
+
+    def update_high_score(self, playerID, new_score):
+        current_score = self.get_score(playerID)
+        
+        if new_score > current_score:
+            self.cursor.execute(
+                """UPDATE Player SET playerScore = ? WHERE playerID = ?""",
+                (new_score, playerID),
+            )
+            self.con.commit()
+            print(f"Player {playerID} score updated to {new_score}.")
+
+    def get_all_players_sorted_by_score(self):
+        self.cursor.execute(
+            """SELECT playerName, playerScore FROM Player ORDER BY playerScore DESC"""
+        )
+        rows = self.cursor.fetchall()
+        return [{"playerName": row[0], "playerScore": row[1]} for row in rows]

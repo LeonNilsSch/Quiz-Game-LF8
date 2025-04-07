@@ -11,27 +11,14 @@ class DatabaseHelper:
             self.con = sqlite3.connect(self.db_path)
             self.cursor = self.con.cursor()
 
+    def get_connection(self):
+        return self.con
+
     def get_value_from_table(self, table, column, condition_column, condition_value):
-        con = self.get_connection()
-        cursor = con.cursor()
-        cursor.execute(
-            f""" 
-        SELECT {column} FROM {table} WHERE {condition_column} = ? 
-        """,
-            (condition_value,),
-        )
-        result = cursor.fetchall()
-        con.close()
-
-        if result:
-            # Falls nur eine Zeile mit einem Wert zurückgegeben wurde
-            if len(result) == 1 and len(result[0]) == 1:
-                return result[0][0]  # Gibt den einzelnen Wert zurück
-
-            # Falls mehrere Zeilen zurückgegeben wurden, aber nur ein Tupel gewünscht ist
-            return tuple(result[0]) if len(result) == 1 else tuple(result)
-
-        return None  # Falls kein Wert gefunden wurde
+        query = f"SELECT {column} FROM {table} WHERE {condition_column} = ?"
+        self.cursor.execute(query, (condition_value,))
+        result = self.cursor.fetchone()
+        return result[0] if result else None
 
     def update_fieldValue(self, table, updateField, newValue, id, idField):
         self.cursor.execute(

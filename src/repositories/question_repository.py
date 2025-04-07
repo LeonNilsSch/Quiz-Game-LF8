@@ -4,6 +4,11 @@ from repositories.database_helper import DatabaseHelper
 
 
 class QuestionRepository(DatabaseHelper):
+    def __init__(self):
+        # Verbindung zur Datenbank herstellen
+        self.con = sqlite3.connect("C:/Users/lnsch/Desktop/Quiz-Game-LF8/src/Database/database.db")
+        self.cursor = self.con.cursor()
+
     def get_questionIDs_with_Categorys(self, categoryid):
         """
         Holt alle Frage-IDs für eine bestimmte Kategorie.
@@ -60,23 +65,22 @@ class QuestionRepository(DatabaseHelper):
         """
         self.cursor.execute(
             """ 
-        SELECT question, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3
+        SELECT question, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3, difficultyID
         FROM Question
         WHERE questionID = ?
         """,
             (questionID,),
         )
-        row = (
-            self.cursor.fetchone()
-        )  # Verwende fetchone(), da nur eine Frage erwartet wird
+        row = self.cursor.fetchone()  # Verwende fetchone(), da nur eine Frage erwartet wird
 
         if row:
             return {
-                "questionText": row[0],
+                "questionText": row[0],  # Verwende den korrekten Spaltennamen "question"
                 "correctAnswer": row[1],
-                "incorrectAnswer1": row[2],
-                "incorrectAnswer2": row[3],
-                "incorrectAnswer3": row[4],
+                "incorrectAnswers1": row[2],  # Korrekte Spaltennamen verwenden
+                "incorrectAnswers2": row[3],  # Korrekte Spaltennamen verwenden
+                "incorrectAnswers3": row[4],  # Korrekte Spaltennamen verwenden
+                "difficultyID": row[5],  # Schwierigkeit hinzufügen
             }
         return None  # Gibt None zurück, wenn keine Frage gefunden wurde
 
@@ -100,9 +104,9 @@ class QuestionRepository(DatabaseHelper):
         categoryID,
         difficultyID,
         correctAnswer,
-        incorrectAnswer1,
-        incorrectAnswer2,
-        incorrectAnswer3,
+        incorrectAnswers1,
+        incorrectAnswers2,
+        incorrectAnswers3,
     ):
         """
         Erstellt eine neue Frage in der Datenbank.
@@ -117,9 +121,9 @@ class QuestionRepository(DatabaseHelper):
                 categoryID,
                 difficultyID,
                 correctAnswer,
-                incorrectAnswer1,
-                incorrectAnswer2,
-                incorrectAnswer3,
+                incorrectAnswers1,
+                incorrectAnswers2,
+                incorrectAnswers3,
             ),
         )
         self.con.commit()
