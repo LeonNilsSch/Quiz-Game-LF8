@@ -286,7 +286,7 @@ class GameplayScreen:
 
         entry_screen()  # Starten Sie den Entry-Screen
 
-    def calculate_question_points(self, is_correct, difficulty):
+    def calculate_question_points(self, is_correct, difficulty, time_left):
        
         """ 
         difficulty: Die Schwierigkeit der Frage (z. B. "leicht", "mittel", "schwer")
@@ -303,8 +303,10 @@ class GameplayScreen:
             "schwer": 2000,
         }.get(difficulty, 1000)  # Standard: 1000 Punkte für unbekannte Schwierigkeit
 
+        # Bonuspunkte basierend auf der verbleibenden Zeit
+        time_bonus = time_left * 10  # 10 Punkte pro verbleibender Sekunde
 
-        return base_points
+        return base_points + time_bonus
 
 
 # Beispielaufruf
