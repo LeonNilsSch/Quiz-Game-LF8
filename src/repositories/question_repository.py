@@ -1,13 +1,12 @@
-import sqlite3
 import random
 from repositories.database_helper import DatabaseHelper
 
 
 class QuestionRepository(DatabaseHelper):
     
-    def __init__(self):
-        super().__init__()
-        self.question_id = None 
+    def __init__(self, connection=None):
+        super().__init__(connection=connection)  # Initialisiert die Verbindung über die Basisklasse
+        self.question_id = None
     
     def get_questionIDs_with_Categorys(self, categoryid):
         """

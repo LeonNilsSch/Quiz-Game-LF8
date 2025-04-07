@@ -4,12 +4,15 @@ import sqlite3
 class DatabaseHelper:
     def __init__(self, db="src/Database/database.db", connection=None):
         if connection:
+            # Wenn eine Verbindung übergeben wird, nutze diese
             self.con = connection
-            self.cursor = self.con.cursor()
         else:
+            # Andernfalls erstelle eine Verbindung zur Standard- oder angegebenen DB
             self.db_path = db
             self.con = sqlite3.connect(self.db_path)
-            self.cursor = self.con.cursor()
+
+        # Cursor wird für Abfragen verwendet
+        self.cursor = self.con.cursor()
 
     def get_value_from_table(self, table, column, condition_column, condition_value):
 
@@ -40,4 +43,4 @@ class DatabaseHelper:
             ),
         )
         self.con.commit()
-        return print(f"Bei Spieler {id} wurde {updateField} geupdatet")
+        return print(f"Bei Spieler {id} wurde {table,id} geupdatet")

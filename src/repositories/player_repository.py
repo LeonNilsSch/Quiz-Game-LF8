@@ -3,8 +3,8 @@ import sqlite3
 
 
 class PlayerRepository(DatabaseHelper):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, connection=None):
+        super().__init__(connection=connection)
         self.player_id = None 
         
     def get_playerID_by_name(self, playerName):
@@ -67,24 +67,25 @@ class PlayerRepository(DatabaseHelper):
             "PlayerToAchievement", "achievementID", "playerID", self.player_id
         )
 
-    def get_correct_question_total_points(self,gameID):
-        self.cursor.execute(
-            """SELECT SUM(d.difficultyPoints) AS total_points
-                FROM RightOrWrong rw
-                JOIN GameQuestion gq ON rw.gameID = gq.gameID AND rw.questionID = gq.questionID
-                JOIN Question q ON q.questionID = gq.questionID
-                JOIN Difficulty d ON q.difficultyID = d.difficultyID
-                WHERE rw.playerID = ? AND rw.gameID = ? AND rw.answerCorrectly = 1;
-                """
-            (
-                self.player_id,
-                gameID
-            ),
-        )
-        rows = self.cursor.fetchone()
-        print(rows[0])
-        return rows[0]
+    # def get_correct_question_total_points(self,gameID):
+    #     self.cursor.execute(
+    #         """SELECT SUM(d.difficultyPoints) AS total_points
+    #             FROM RightOrWrong rw
+    #             JOIN GameQuestion gq ON rw.gameID = gq.gameID AND rw.questionID = gq.questionID
+    #             JOIN Question q ON q.questionID = gq.questionID
+    #             JOIN Difficulty d ON q.difficultyID = d.difficultyID
+    #             WHERE rw.playerID = ? AND rw.gameID = ? AND rw.answerCorrectly = 1;
+    #             """
+    #         (
+    #             self.player_id,
+    #             gameID
+    #         ),
+    #     )
+    #     rows = self.cursor.fetchone()
+    #     print(rows[0])
+    #     return rows[0]
     
+    #update CorrectQuestionsHard, Easy, Medium
 
-    # def update_playerField(self,updateField, playerID, newValue):
-    #     self.update_fieldValue("Player", updateField, newValue, playerID, "playerID")
+    def update_playerField(self,updateField, playerID, newValue):
+       self.update_fieldValue("Player", updateField, newValue, playerID, "playerID")
