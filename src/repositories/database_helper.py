@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class DatabaseHelper:
     def __init__(self, db="Database/database.db", connection=None):
         if connection:
@@ -9,16 +10,19 @@ class DatabaseHelper:
             self.db_path = db
             self.con = sqlite3.connect(self.db_path)
             self.cursor = self.con.cursor()
-            
+
     def get_value_from_table(self, table, column, condition_column, condition_value):
         con = self.get_connection()
         cursor = con.cursor()
-        cursor.execute(f""" 
+        cursor.execute(
+            f""" 
         SELECT {column} FROM {table} WHERE {condition_column} = ? 
-        """, (condition_value,))
+        """,
+            (condition_value,),
+        )
         result = cursor.fetchall()
         con.close()
-        
+
         if result:
             # Falls nur eine Zeile mit einem Wert zurückgegeben wurde
             if len(result) == 1 and len(result[0]) == 1:
@@ -28,9 +32,14 @@ class DatabaseHelper:
             return tuple(result[0]) if len(result) == 1 else tuple(result)
 
         return None  # Falls kein Wert gefunden wurde
-    
-    def update_fieldValue(self,table,updateField, newValue,id,idField):
-        self.cursor.execute(f"""UPDATE {table} SET {updateField} = ? WHERE {idField} = ?""",(newValue,id,))
-        self.con.commit() 
+
+    def update_fieldValue(self, table, updateField, newValue, id, idField):
+        self.cursor.execute(
+            f"""UPDATE {table} SET {updateField} = ? WHERE {idField} = ?""",
+            (
+                newValue,
+                id,
+            ),
+        )
+        self.con.commit()
         return print(f"Bei Spieler {id} wurde {updateField} geupdatet")
-    

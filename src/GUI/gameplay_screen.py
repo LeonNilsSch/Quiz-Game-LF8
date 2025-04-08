@@ -3,12 +3,13 @@ import os
 import random
 
 # Füge den Hauptordner `src` zum Python-Suchpfad hinzu
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 import tkinter as tk
 from tkinter import messagebox
 from src.question import Question
 from repositories.question_repository import QuestionRepository
+
 
 class GameplayScreen:
     def __init__(self, category_id):
@@ -16,7 +17,9 @@ class GameplayScreen:
         self.question_repo = QuestionRepository()
         self.current_question = None
         self.score = 0
-        self.question_ids = self.question_repo.get_questionIDs_with_Categorys(self.category_id)
+        self.question_ids = self.question_repo.get_questionIDs_with_Categorys(
+            self.category_id
+        )
         self.current_question_index = 0
         self.time_left = 10  # Timer in Sekunden
 
@@ -46,7 +49,12 @@ class GameplayScreen:
         self.question_frame.pack(pady=20)
 
         self.question_label = tk.Label(
-            self.question_frame, text="", font=self.label_font, fg="white", bg="#2e2e2e", wraplength=700
+            self.question_frame,
+            text="",
+            font=self.label_font,
+            fg="white",
+            bg="#2e2e2e",
+            wraplength=700,
         )
         self.question_label.pack()
 
@@ -63,20 +71,28 @@ class GameplayScreen:
                 bg=self.btn_bg,
                 fg=self.btn_fg,
                 relief="flat",
-                command=lambda i=i: self.check_answer(i)
+                command=lambda i=i: self.check_answer(i),
             )
             btn.pack(pady=5, ipadx=20, ipady=10, fill="x")
             self.answer_buttons.append(btn)
 
         # Frame für den Score
         self.score_label = tk.Label(
-            self.root, text=f"Punkte: {self.score}", font=self.label_font, fg="white", bg="#2e2e2e"
+            self.root,
+            text=f"Punkte: {self.score}",
+            font=self.label_font,
+            fg="white",
+            bg="#2e2e2e",
         )
         self.score_label.pack(pady=20)
 
         # Timer-Label
         self.timer_label = tk.Label(
-            self.root, text=f"Zeit: {self.time_left} Sekunden", font=self.label_font, fg="white", bg="#2e2e2e"
+            self.root,
+            text=f"Zeit: {self.time_left} Sekunden",
+            font=self.label_font,
+            fg="white",
+            bg="#2e2e2e",
         )
         self.timer_label.pack(pady=20)
 
@@ -99,12 +115,22 @@ class GameplayScreen:
 
         try:
             # Überprüfen und anpassen der Feldnamen
-            question_text = question_data["questionText"]  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
-            correct_answer = question_data["correctAnswer"]  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
+            question_text = question_data[
+                "questionText"
+            ]  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
+            correct_answer = question_data[
+                "correctAnswer"
+            ]  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
             incorrect_answers = [
-                question_data["incorrectAnswer1"],  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
-                question_data["incorrectAnswer2"],  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
-                question_data["incorrectAnswer3"]   # Beispiel: Anpassen an den tatsächlichen Spaltennamen
+                question_data[
+                    "incorrectAnswer1"
+                ],  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
+                question_data[
+                    "incorrectAnswer2"
+                ],  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
+                question_data[
+                    "incorrectAnswer3"
+                ],  # Beispiel: Anpassen an den tatsächlichen Spaltennamen
             ]
         except KeyError as e:
             print(f"Fehlender Schlüssel in den Daten: {e}")
@@ -120,7 +146,7 @@ class GameplayScreen:
             question_text=question_text,
             options=all_answers,
             correct_answer=correct_answer,
-            category=self.category_id
+            category=self.category_id,
         )
 
         # Frage und Antworten in der GUI anzeigen
@@ -151,13 +177,20 @@ class GameplayScreen:
 
     def check_answer(self, selected_index):
         selected_answer = self.current_question.options[selected_index]
-        is_correct = self.current_question.right_or_wrong(selected_answer, self.current_question.correct_answer)
+        is_correct = self.current_question.right_or_wrong(
+            selected_answer, self.current_question.correct_answer
+        )
 
         if is_correct:
             self.score += self.current_question_points
-            self.feedback_label.config(text=f"Richtig! (+{self.current_question_points} Punkte)", fg="green")
+            self.feedback_label.config(
+                text=f"Richtig! (+{self.current_question_points} Punkte)", fg="green"
+            )
         else:
-            self.feedback_label.config(text=f"Falsch! Richtige Antwort: {self.current_question.correct_answer}", fg="red")
+            self.feedback_label.config(
+                text=f"Falsch! Richtige Antwort: {self.current_question.correct_answer}",
+                fg="red",
+            )
 
         # Aktualisiere den Punktestand
         self.score_label.config(text=f"Punkte: {self.score}")
@@ -172,7 +205,11 @@ class GameplayScreen:
 
         # Zeige die Punktzahl
         tk.Label(
-            self.root, text=f"Spiel beendet! Deine Punktzahl: {self.score}", font=self.label_font, fg="white", bg="#2e2e2e"
+            self.root,
+            text=f"Spiel beendet! Deine Punktzahl: {self.score}",
+            font=self.label_font,
+            fg="white",
+            bg="#2e2e2e",
         ).pack(pady=20)
 
         # Button zum Entry-Screen
@@ -183,13 +220,15 @@ class GameplayScreen:
             bg=self.btn_bg,
             fg=self.btn_fg,
             relief="flat",
-            command=self.return_to_entry_screen
+            command=self.return_to_entry_screen,
         ).pack(pady=20, ipadx=20, ipady=10)
 
     def return_to_entry_screen(self):
         self.root.destroy()
         from GUI.entry_screen import entry_screen  # Importieren Sie die Funktion
+
         entry_screen()  # Starten Sie den Entry-Screen
+
 
 # Beispielaufruf
 if __name__ == "__main__":
