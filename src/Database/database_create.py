@@ -62,7 +62,7 @@ cursor.execute(
 CREATE TABLE IF NOT EXISTS Game (
     gameID INTEGER PRIMARY KEY AUTOINCREMENT,
     gameDate DATE,
-    gameKey TEXT,
+    gameKey TEXT
 );
 """
 )

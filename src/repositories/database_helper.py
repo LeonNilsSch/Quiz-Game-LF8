@@ -2,7 +2,7 @@ import sqlite3
 
 
 class DatabaseHelper:
-    def __init__(self, db="src/Database/database.db", connection=None):
+    def __init__(self, db="Database/database.db", connection=None):
         if connection:
             # Wenn eine Verbindung übergeben wird, nutze diese
             self.con = connection

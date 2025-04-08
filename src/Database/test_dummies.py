@@ -15,7 +15,7 @@ cursor.execute(
                VALUES ("12345","Jana", 100, 10 ,20, 150) """
 )
 cursor.execute(
-    """INSERT INTO Player (playerPassword, Playername, playerScore,,orrectHardQuestions, correctMediumQuestions, correctEasyQuestions)
+    """INSERT INTO Player (playerPassword, Playername, playerScore,correctHardQuestions, correctMediumQuestions, correctEasyQuestions)
                VALUES ("12345","Luka", 1000,10, 10, 10) """
 )
 # Änderungen speichern und Verbindung schließen

@@ -4,10 +4,8 @@ from repositories.database_helper import DatabaseHelper
 
 class DifficultyRepository(DatabaseHelper):
     def __init__(self, connection=None):
-        super().__init__()
-        if connection:
-            self.con = connection
-            self.cursor = self.con.cursor()
+        super().__init__(connection=connection)  # Initialisiert die Verbindung über die Basisklasse
+        self.question_id = None
     
     def get_difficultyId_from_questionId(self, questionID):
         return self.get_value_from_table(

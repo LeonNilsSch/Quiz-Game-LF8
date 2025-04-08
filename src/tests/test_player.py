@@ -93,7 +93,7 @@ if __name__ == "__main__":
     suite = unittest.TestSuite()
     suite.addTest(TestPlayerRepository("test_create_Player"))
     suite.addTest(TestPlayerRepository("test_update_playerField"))
-    suite.addTest(TestPlayerRepository("test_delete_User"))
+    suite.addTest(TestPlayerRepository("test_delete_user"))
 
     runner = unittest.TextTestRunner()
     runner.run(suite)

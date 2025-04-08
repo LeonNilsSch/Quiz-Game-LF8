@@ -1,6 +1,6 @@
 import sqlite3
 
-con = sqlite3.connect("src/Database/database.db")
+con = sqlite3.connect("Database/database.db")
 cursor = con.cursor()
 
 
@@ -11,7 +11,6 @@ class Player:
         name: str,
         player_id: int,
         player_password,
-        wins,
         score,
         correctHardQuestions,
         correctMediumQuestions,
@@ -21,7 +20,6 @@ class Player:
         self.player_id = player_id
         self.password = player_password
         self.score = score
-        self.wins = wins
         self.correctHardQuestions = correctHardQuestions
         self.correctMediumQuestions = correctMediumQuestions
         self.correctEasyQuestions = correctEasyQuestions

@@ -1,4 +1,3 @@
-import sqlite3
 from repositories.question_repository import QuestionRepository
 from question import Question
 
@@ -9,36 +8,35 @@ from repositories.achievment_repository import AchievmentRepository
 from repositories.player_repository import PlayerRepository
 from player import Player
 
-# category_repo = CatecoryRepository()
-# categoryID = category_repo.get_category_id_by_name("Politics")
+category_repo = CatecoryRepository()
+categoryID = category_repo.get_category_id_by_name("Politics")
 
-# q = Question("Sample question", ["Option1", "Option2"], "Option1", "Politics")
-# rq = QuestionRepository()
-# ids = rq.get_questionIDs_with_Categorys(categoryID)
-# rq.fill_game_question(ids, 1)
-# questionid = rq.get_random_questionID(1)
-# rq.get_question()
-# rq.get_correct_answer()
-# # rq.fill_right_or_wrong(1,1,1,True)
-# print(rq.get_question_points())
+q = Question("Sample question", ["Option1", "Option2"], "Option1", "Politics")
+rq = QuestionRepository()
+ids = rq.get_questionIDs_with_Categorys(categoryID)
+rq.fill_game_question(ids, 1)
+questionid = rq.get_random_questionID(1)
+rq.get_question()
+rq.get_correct_answer()
+# rq.fill_right_or_wrong(1,1,1,True)
+print(rq.get_question_points())
 
-# d = DifficultyRepository()
-# difficultyid = d.get_difficultyId_from_questionId(questionid)
-# print(difficultyid)
-# d.get_difficulty_points(difficultyid)
-# d.get_all_difficulties()
+d = DifficultyRepository()
+difficultyid = d.get_difficultyId_from_questionId(questionid)
+print(difficultyid)
+d.get_difficulty_points(difficultyid)
+d.get_all_difficulties()
 
 a = AchievmentRepository()
-a.create_new_achievments("correctEasyQuestions 20 or higher",20,"correctEasyQuestions",20)
-# requierments = a.get_requierments(1)
-# achievementName = a.get_achievment_name(1)
+a.create_new_achievments("correctEasyQuestions 20 or higher","correctEasyQuestions",20)
+requierments = a.get_requierments(1)
+achievementName = a.get_achievment_name(1)
 achievmentsInfos=a.get_all_achievements()
 pr = PlayerRepository()
 p = Player(
     player_id=1,
     name="Leon",
     player_password=123456,
-    wins=10,
     score=0,
     correctHardQuestions=10,
     correctMediumQuestions=5,
