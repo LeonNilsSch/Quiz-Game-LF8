@@ -8,8 +8,8 @@ class Player:
 
     def __init__(
         self,
-        name: str,
         player_id: int,
+        name: str,
         player_password,
         score,
         correctHardQuestions,

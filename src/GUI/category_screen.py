@@ -5,15 +5,13 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import tkinter as tk
-from selection_screen import (mode_screen,)
 from repositories.category_repository import CatecoryRepository
-
+from gameplay_screen import GameplayScreen  # Importiere den GameplayScreen
 
 category_repo = CatecoryRepository()
 
 
 def category_screen():
-    
     root = tk.Tk()
     root.title("Wähle die Kategorie")
     root.geometry("1200x800")
@@ -49,23 +47,26 @@ def category_screen():
             bg=btn_bg,
             fg=btn_fg,
             relief="flat",
-            command=lambda c=category: open_mode_screen(root, c),
+            command=lambda c=category: start_gameplay(root, c),
         )
         btn.pack(pady=15, ipadx=10, ipady=10)
 
     root.mainloop()
 
 
-def open_mode_screen(root, selected_category):
+def start_gameplay(root, selected_category):
+    """
+    Startet den GameplayScreen basierend auf der ausgewählten Kategorie.
+    """
     print(f"Ausgewählte Kategorie: {selected_category}")
     
-    # Hier kannst du z. B. die Kategorie-ID ermitteln oder weitermachen
+    # Hole die Kategorie-ID basierend auf dem Namen
     categoryID = category_repo.get_category_id_by_name(selected_category)
-    print(categoryID)
-    """
-    Öffnet den Modus-Bildschirm und schließt den Kategorie-Bildschirm.
-    """
+    print(f"Category ID: {categoryID}")
     
-    root.destroy()  # Schließt den Kategorie-Bildschirm
-    mode_screen()
+    # Schließe den Kategorie-Bildschirm
+    root.destroy()
+    
+    # Starte den GameplayScreen mit der Kategorie-ID
+    GameplayScreen(category_id=categoryID)
 

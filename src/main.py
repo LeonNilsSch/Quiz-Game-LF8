@@ -1,5 +1,4 @@
 from repositories.question_repository import QuestionRepository
-from question import Question
 
 # from repositories.game_repository import GameRepository
 from repositories.category_repository import CatecoryRepository

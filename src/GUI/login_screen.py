@@ -84,6 +84,9 @@ def login_screen():
     )
     btn_login.pack(pady=10, ipadx=20, ipady=10)
 
+    # Key-Binding für Enter-Taste
+    login_screen_window.bind("<Return>", lambda event: login())
+
     # Account erstellen Button
     def open_create_account_screen():
         login_screen_window.destroy()

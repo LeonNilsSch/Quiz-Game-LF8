@@ -8,44 +8,23 @@ class QuestionRepository(DatabaseHelper):
         super().__init__(connection=connection)  # Initialisiert die Verbindung über die Basisklasse
         self.question_id = None
     
-    def get_questionIDs_with_Categorys(self, categoryid):
+    def get_questionIDs_with_Categorys(self, category_id):
         """
-        Holt alle Frage-IDs für eine bestimmte Kategorie.
+        Holt alle Frage-IDs basierend auf der Kategorie-ID.
         """
         self.cursor.execute(
-            """ 
-        SELECT q.questionID
-        FROM Question q
-        JOIN Category c ON q.categoryID = c.categoryID
-        WHERE c.categoryID = ?
-        """,
-            (categoryid,),
+            """
+            SELECT questionID
+            FROM Question
+            WHERE categoryID = ?
+            """,
+            (category_id,),
         )
-    
         rows = self.cursor.fetchall()
-        questionids = [row[0] for row in rows]
-        return questionids
-
-    # def fill_game_question(self, questionids, gameid):
-    #     """
-    #     Füllt die Tabelle GameQuestion mit den Frage-IDs für ein bestimmtes Spiel.
-    #     """
-    #     for questions in questionids:
-    #         self.cursor.execute(
-    #             """ 
-    #         INSERT INTO GameQuestion(gameID, questionID, played) VALUES (?, ?, 0)
-    #         """,
-    #             (
-    #                 gameid,
-    #                 questions,
-    #             ),
-    #         )
-    #     self.con.commit()
+        return [row[0] for row in rows]
 
     def get_random_questionID(self, questionIDs):
-        
         self.question_id = random.choice(questionIDs)
-        questionIDs.remove(self.question_id)
         return self.question_id
         
 
@@ -55,7 +34,7 @@ class QuestionRepository(DatabaseHelper):
         """
         self.cursor.execute(
             """ 
-        SELECT question, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3
+        SELECT question, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3, difficultyID
         FROM Question
         WHERE questionID = ?
         """,
@@ -72,6 +51,7 @@ class QuestionRepository(DatabaseHelper):
                 "incorrectAnswer1": row[2],
                 "incorrectAnswer2": row[3],
                 "incorrectAnswer3": row[4],
+                "difficultyID": row[5]
             }
         return None  # Gibt None zurück, wenn keine Frage gefunden wurde
 
@@ -120,17 +100,6 @@ class QuestionRepository(DatabaseHelper):
         self.con.commit()
 
         return "Question created! :)"
-
-    def question_played(self, gameID, played):
-        self.cursor.execute(
-            f"""UPDATE GameQuestion SET played = ? WHERE questionID = ? and gameID = ? """,
-            (
-                played,
-                self.question_id,
-                gameID,
-            ),
-        )
-        self.con.commit()
     
     def update_question(self, questionID, inputField, userChange): #hier wird eine beliebe QuestionID übergeben, deswegen kein self.question_id.
         #updatet die ausgwählte frage, mit dem Übergebenden Werten
@@ -147,29 +116,15 @@ class QuestionRepository(DatabaseHelper):
         )
         self.con.commit()
 
-    def fill_right_or_wrong(self, playerID, gameID, right):
-        """
-        Füllt die Tabelle RightOrWrong mit den Spielerantworten.
-        """
-        self.cursor.execute(
-            """INSERT INTO RightOrWrong(playerID,gameID,questionID,answerCorrectly) VALUES(?,?,?,?)""",
-            (playerID, gameID, self.question_id, right),
-        )
-        self.con.commit()
-        return
 
-    def get_question_points(self):
-        #Holt die Punkte für eine bestimmte Frage basierend auf der Schwierigkeit.
-        self.cursor.execute(
-            """ SELECT d.difficultyID, d.difficultyPoints
-                FROM Difficulty d
-                JOIN Question q ON d.difficultyID = q.difficultyID
-                WHERE q.questionID = ?
-            """,
-            (self.question_id,),
+    def get_question_points(self, question_id):
+        # Implementation to fetch points for the given question_id
+        cursor = self.con.cursor()
+        cursor.execute(
+            "SELECT difficultyPoints FROM Difficulty WHERE difficultyID = (SELECT difficultyID FROM Question WHERE questionID = ?)",
+            (question_id,),
         )
+        result = cursor.fetchone()
+        return result[0] if result else None
 
-        rows = self.cursor.fetchone()
-        return rows
-    
-    
+

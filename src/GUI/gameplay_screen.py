@@ -8,19 +8,28 @@ import tkinter as tk
 from tkinter import messagebox
 from repositories.question_repository import QuestionRepository
 from repositories.player_repository import PlayerRepository
-
-
+from repositories.difficulty_repository import DifficultyRepository
+from player import Player
+from repositories.achievment_repository import AchievmentRepository
 class GameplayScreen:
     def __init__(self, category_id):
         self.category_id = category_id
         self.question_repo = QuestionRepository()
+        self.player_repo = PlayerRepository()
+        self.player =  Player(
+                                player_id=1,
+                                name="Leon",
+                                player_password=123456,
+                                score=0,
+                                correctHardQuestions=10,
+                                correctMediumQuestions=5,
+                                correctEasyQuestions=20,
+                            )
         self.current_question = None
         self.score = 0
-        self.question_ids = self.question_repo.get_random_questionID(
-            self.question_repo.get_questionIDs_with_Categorys(self.category_id))
-    
-        self.current_question_index = 0
-        self.time_left = 10  # Timer in Sekunden
+        self.question_id = None
+        self.not_answert = self.question_repo.get_questionIDs_with_Categorys(self.category_id)
+        self.time_left = 60  # Timer in Sekunden
 
         # Initialisiere das Hauptfenster
         self.root = tk.Tk()
@@ -63,7 +72,7 @@ class GameplayScreen:
 
         self.answer_buttons = []
         # Maximal 4 Antwortmöglichkeiten
-        for i in range(4):  
+        for i in range(4):
             btn = tk.Button(
                 self.answer_frame,
                 text="",
@@ -102,6 +111,17 @@ class GameplayScreen:
         )
         self.feedback_label.pack(pady=20)
 
+        # Button zum Beenden des Spiels (oben rechts)
+        self.end_game_button = tk.Button(
+            self.root,
+            text="Spiel beenden",
+            font=self.btn_font,
+            bg=self.btn_bg,
+            fg=self.btn_fg,
+            relief="flat",
+            command=self.end_game,  # Ruft die Methode zum Beenden des Spiels auf
+        )
+        self.end_game_button.place(relx=1.0, rely=0.0, anchor="ne", x=-10, y=10)  # Oben rechts
     
     
     def load_next_question(self):
@@ -109,13 +129,18 @@ class GameplayScreen:
         if self.time_left <= 0:
             return
 
+        # Timer pausieren, während die nächste Frage geladen wird
+        if hasattr(self, "timer_after_id") and self.timer_after_id is not None:
+            self.root.after_cancel(self.timer_after_id)
+            self.timer_after_id = None
+
         # Lade die nächste Frage
-        question_id = self.question_ids
-        print("ID:", question_id)
+        self.question_id = self.question_repo.get_random_questionID(self.not_answert)
+        self.not_answert.remove(self.question_id)
+
+        print("ID:", self.question_id)
         question_data = self.question_repo.get_question()
-        print( question_data)
-        # Debugging: Überprüfen, welche Schlüssel in question_data vorhanden sind
-        # print(f"Erhaltene Daten für Frage ID {question_id}: {question_data}")
+        print(question_data)
 
         try:
             question_text = question_data.get("questionText", "Keine Frage vorhanden")
@@ -151,7 +176,7 @@ class GameplayScreen:
 
         # Frage und Antworten in der GUI anzeigen
         self.question_label.config(
-            text=f"Frage ID: {question_id}\n\n{self.current_question['question_text']}\n\n"
+            text=f"{self.current_question['question_text']}\n\n"
         )
         for i, option in enumerate(self.current_question["options"]):
             self.answer_buttons[i].config(text=option, state="normal")
@@ -168,25 +193,24 @@ class GameplayScreen:
 
         if hasattr(self, "difficulty_label"):
             # Entferne das alte Label, falls vorhanden
-            self.difficulty_label.destroy() 
+            self.difficulty_label.destroy()
 
+        # Schwierigkeitsanzeige erstellen
         self.difficulty_label = tk.Label(
-            self.root,
+            self.question_frame,  # Füge die Schwierigkeit in das gleiche Frame wie die Frage ein
             text=f"Schwierigkeit: {difficulty_text.capitalize()}",
             font=self.label_font,
             fg=difficulty_color,
             bg="#2e2e2e",
         )
-        self.difficulty_label.pack(pady=10)
+        # Schwierigkeitsanzeige mittig über der Frage platzieren
+        self.difficulty_label.pack(pady=(0, 10))  # Abstand nach unten
 
         # Punkte für die aktuelle Frage holen
-        question_points = self.question_repo.get_question_points(question_id)
-        self.current_question_points = question_points[1] if question_points else 0
+        question_points = self.question_repo.get_question_points(self.question_id)
+        self.current_question_points = question_points if question_points else 0
 
-        self.current_question_index += 1
-
-        # Timer zurücksetzen und starten
-        self.time_left = 10
+        # Timer fortsetzen
         self.update_timer()
 
     def update_timer(self):
@@ -197,8 +221,11 @@ class GameplayScreen:
             self.timer_after_id = self.root.after(1000, self.update_timer)
         else:
             # Zeit abgelaufen
-            if self.time_left == 0:  # Verhindere mehrfaches Aufrufen von end_game
-                self.end_game()
+            if hasattr(self, "timer_after_id") and self.timer_after_id is not None:
+                self.root.after_cancel(self.timer_after_id)
+                self.timer_after_id = None  # Timer-ID zurücksetzen
+            self.end_game()  # Spiel beenden, wenn die Zeit abgelaufen ist
+
     # holt die ausgewählte Antwort, überprüft sie nach richtigkeit und schwierigkeit, und berechnet die Punkte
     def check_answer(self, selected_index):
         selected_answer = self.current_question["options"][selected_index]
@@ -211,6 +238,12 @@ class GameplayScreen:
             self.feedback_label.config(
                 text=f"Richtig! (+{question_points} Punkte)", fg="green"
             )
+        #     update_values_dic = {
+        #         {
+        #     "correctHardQuestions": ,
+        #     "correctEasyQuestions": ,
+        # }"correctEasyQuestions": 
+        #     }
         else:
             self.feedback_label.config(
                 text=f"Falsch! Richtige Antwort: {self.current_question['correct_answer']}",
@@ -223,16 +256,40 @@ class GameplayScreen:
         # Lade die nächste Frage nach kurzer Verzögerung
         self.next_question_after_id = self.root.after(2000, self.load_next_question)
 
+    def check_for_achievement(self,playerid = 1):
+        achievment_repo =AchievmentRepository()
+        achievmentsInfos=achievment_repo.get_all_achievements()
+        player_achievements = self.player_repo.get_all_player_achievements()
+        print(player_achievements)
+        check_achievment = self.player.receive_achievement(achievmentsInfos[0],achievmentsInfos[1], achievmentsInfos[2], player_achievements)
+
+        if check_achievment:
+            achievment_repo.fill_player_to_achievments(
+                playerid, check_achievment
+            )
+        print(self.player_repo.get_player_achievments())
+
+        # new_value_correctanswer = pr.get_correct_Questions_by_difficulty("medium")
+       
+    
     def end_game(self):
         # Stoppe den Timer
         self.time_left = 0
 
         # Abbrechen des geplanten after-Callbacks für den Timer
-        if hasattr(self, "timer_after_id"):
-            self.root.after_cancel(self.timer_after_id)
+        if hasattr(self, "timer_after_id") and self.timer_after_id is not None:
+            try:
+                self.root.after_cancel(self.timer_after_id)
+            except ValueError:
+                pass  # Timer ist bereits abgelaufen
+            self.timer_after_id = None  # Timer-ID zurücksetzen
 
-        if hasattr(self, "next_question_after_id"):
-            self.root.after_cancel(self.next_question_after_id)
+        if hasattr(self, "next_question_after_id") and self.next_question_after_id is not None:
+            try:
+                self.root.after_cancel(self.next_question_after_id)
+            except ValueError:
+                pass  # Callback ist bereits ausgeführt
+            self.next_question_after_id = None
 
         # Entferne alle Widgets und zeige die Endpunktzahl
         for widget in self.root.winfo_children():
@@ -273,16 +330,35 @@ class GameplayScreen:
             relief="flat",
             command=self.show_leaderboard,
         ).pack(pady=20, ipadx=20, ipady=10)
+        
+        self.check_for_achievement()
 
     def show_leaderboard(self):
         self.root.destroy()
         from GUI.leaderboard_screen import leaderboard_screen  # Importiere die Funktion
         leaderboard_screen()  # Starte die Leaderboard-Screen-Funktion
 
-    def update_high_score(self, player_id, final_score):
+    def update_high_score(self, player_id,final_score):
         player_repo = PlayerRepository()
         player_repo.update_high_score(player_id,final_score)
         print(f"Game ended. Final score for player {player_id}: {final_score}")
+    
+    # def count_correct_Questions(self, difficultyID):
+    #     difficulty_repo = DifficultyRepository()
+    #     difficulty_name = difficulty_repo.get_value_from_table("Difficulty", "difficultyName", "difficultyID",difficultyID)
+        
+    #     if key_to_increment in value_list:
+    #         value_list[key_to_increment] += 1
+        
+    def update_player_values_test(self, player_id,final_score):
+        player_repo = PlayerRepository()
+        value_list = {
+            "correctHardQuestions": 10,
+            "correctEasyQuestions": 5,
+        }
+        for field, new_value in value_list.items():
+            print(f"Field: {field}, New Value: {new_value}")
+            player_repo.update_high_score2(player_id, new_value, field)
 
     def return_to_entry_screen(self):
         self.root.destroy()
@@ -311,9 +387,6 @@ class GameplayScreen:
         time_bonus = time_left * 10  # 10 Punkte pro verbleibender Sekunde
 
         return base_points + time_bonus
+    
+    
 
-
-# Beispielaufruf
-if __name__ == "__main__":
-    # Ersetze `1` durch die tatsächliche Kategorie-ID, die zuvor ausgewählt wurde
-    GameplayScreen(category_id=1)
