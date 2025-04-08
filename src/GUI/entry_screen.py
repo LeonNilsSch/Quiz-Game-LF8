@@ -1,13 +1,15 @@
 import tkinter as tk
 from tkinter import ttk
-from category_screen import category_screen  # Importiere category_screen.py
-from achievement_screen import achievement_screen  # Importiere die Achievement-Screen-Funktion
+from category_screen import category_screen
+from achievement_screen import achievement_screen
+from helper_screen import helper_screen
 
 
 # Funktion, um die Kategorieauswahl zu öffnen
+# Schließt Entry-screen und startet Kategorieauswahl-screen
 def open_category_screen():
-    main_screen.destroy()  # Schließt den Entry Screen
-    category_screen()  # Öffnet die Kategorieauswahl
+    main_screen.destroy()
+    category_screen()
 
 
 # Hauptbildschirm (Entry Screen)
@@ -59,8 +61,24 @@ def entry_screen():
         command=open_achievement_screen,
     ).pack(pady=10, ipadx=20, ipady=10)
 
+    # Button for the helper screen in the bottom-right corner
+    help_button = tk.Button(
+        main_screen,
+        text="Hilfe",
+        font=btn_font,
+        bg=btn_bg,
+        fg=btn_fg,
+        relief="flat",
+        command=helper_screen,  # Open the helper screen
+    )
+    help_button.place(relx=1.0, rely=1.0, anchor="se", x=-20, y=-20)  # Bottom-right corner with padding
+
+    # Bind the "h" key to open the helper screen
+    main_screen.bind("h", lambda event: helper_screen())
+
     main_screen.mainloop()
 
+# Schhließt Entry-screen und öffnet Achievement-screen
 def open_achievement_screen():
-    main_screen.destroy()  # Schließt den Entry Screen
-    achievement_screen()  # Öffnet die Achievement-Screen-Funktion
+    main_screen.destroy()
+    achievement_screen()

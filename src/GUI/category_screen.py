@@ -5,12 +5,15 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import tkinter as tk
-from selection_screen import (
-    mode_screen,
-)  # Importiere mode_screen aus selection_screen.py
+from selection_screen import (mode_screen,)
+from repositories.category_repository import CatecoryRepository
+
+
+category_repo = CatecoryRepository()
 
 
 def category_screen():
+    
     root = tk.Tk()
     root.title("Wähle die Kategorie")
     root.geometry("1200x800")
@@ -36,14 +39,7 @@ def category_screen():
     ).pack(pady=20)
 
     # Buttons für Kategorien
-    categories = [
-        "Politik",
-        "Geographie",
-        "General Knowledge",
-        "Film/Kino",
-        "Videospiele",
-        "Anime/Manga",
-    ]
+    categories = category_repo.get_category_name()
 
     for category in categories:
         btn = tk.Button(
@@ -53,16 +49,23 @@ def category_screen():
             bg=btn_bg,
             fg=btn_fg,
             relief="flat",
-            command=lambda c=category: open_mode_screen(root),
+            command=lambda c=category: open_mode_screen(root, c),
         )
         btn.pack(pady=15, ipadx=10, ipady=10)
 
     root.mainloop()
 
 
-def open_mode_screen(root):
+def open_mode_screen(root, selected_category):
+    print(f"Ausgewählte Kategorie: {selected_category}")
+    
+    # Hier kannst du z. B. die Kategorie-ID ermitteln oder weitermachen
+    categoryID = category_repo.get_category_id_by_name(selected_category)
+    print(categoryID)
     """
     Öffnet den Modus-Bildschirm und schließt den Kategorie-Bildschirm.
     """
+    
     root.destroy()  # Schließt den Kategorie-Bildschirm
     mode_screen()
+

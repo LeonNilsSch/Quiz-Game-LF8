@@ -8,9 +8,16 @@ class PlayerRepository(DatabaseHelper):
         self.player_id = None 
         
     def get_playerID_by_name(self, playerName):
-        
         self.player_id = self.get_value_from_table("Player", "playerID", "playerName", playerName)
         return self.player_id #brauchen wir hier den Return
+    
+    def get_playerName(self,playerName):
+        test= print(self.get_value_from_table("Player", "playerName", "playerName", playerName))
+        return test
+        
+    def get_player_password(self):
+        return self.get_value_from_table("Player", "playerID", "playerName", self.player_id)
+        
     def get_score(self):
         return self.get_value_from_table("Player", "playerScore", "playerID", self.player_id)
 
@@ -26,8 +33,8 @@ class PlayerRepository(DatabaseHelper):
             (self.player_id,),
         )
 
-        anzahl_spiele = self.cursor.fetchone()[0]
-        return anzahl_spiele
+        amount_games = self.cursor.fetchone()[0]
+        return amount_games
 
     def get_player_achievments(self):
         self.cursor.execute(
@@ -87,5 +94,24 @@ class PlayerRepository(DatabaseHelper):
     
     #update CorrectQuestionsHard, Easy, Medium
 
+    def update_high_score(self,playerID, new_score):
+        current_score = self.get_score()
+        print(current_score)
+        if current_score == None or new_score > current_score:
+
+            self.cursor.execute(
+                """UPDATE Player SET playerScore = ? WHERE playerID = ?""",
+                (new_score, playerID),
+            )
+            self.con.commit()
+            print(f"Player {playerID} score updated to {new_score}.")
+
+    def get_all_players_sorted_by_score(self):
+        self.cursor.execute(
+            """SELECT playerName, playerScore FROM Player ORDER BY playerScore DESC"""
+        )
+        rows = self.cursor.fetchall()
+        return [{"playerName": row[0], "playerScore": row[1]} for row in rows]
+    
     def update_playerField(self,updateField, playerID, newValue):
        self.update_fieldValue("Player", updateField, newValue, playerID, "playerID")

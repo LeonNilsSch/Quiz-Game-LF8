@@ -28,8 +28,8 @@ class Player:
     def receive_achievement(
     self, achievementIDs, requirements_fields, required_values, player_achievements
 ):
-        achievement_avieved =[]
        # Sicherstellen, dass player_achievements eine Liste von Tupeln ist
+        achievement_avieved =[]
         if player_achievements is None:
             player_achievements = []
         elif isinstance(player_achievements, int):
@@ -42,27 +42,29 @@ class Player:
             ]
 
         # Set mit IDs der bereits erhaltenen Achievements
-        bereits_erhaltene_ids = {
-            eintrag[0] for eintrag in player_achievements
-            if isinstance(eintrag, (tuple, list)) and len(eintrag) > 0
+        already_recieved_ids = {
+            entry[0] for entry in player_achievements
+            if isinstance(entry, (tuple, list)) and len(entry) > 0
         }
 
         # Durch alle Anforderungen und zugehörigen IDs gehen
-        for achievement_id, attribut_name, benoetigter_wert in zip(achievementIDs, requirements_fields, required_values):
+        for achievement_id, attribute_name, required_value in zip(achievementIDs, requirements_fields, required_values):
 
             # Prüfen, ob dieses Achievement bereits vorhanden ist
-            if achievement_id in bereits_erhaltene_ids:
-                continue  # Dann überspringen
+            if achievement_id in already_recieved_ids:
+                continue
 
             # Den aktuellen Wert des Spielers für das geforderte Attribut holen
-            aktueller_wert = getattr(self, attribut_name, None)
+            current_value = getattr(self, attribute_name, None)
 
             # Wenn Attribut existiert und Wert ausreicht → Achievement vergeben
-            if aktueller_wert is not None and aktueller_wert >= benoetigter_wert:
+            if current_value is not None and current_value >= required_value:
                
                 achievement_avieved.append(achievement_id)
-                print(f"Achievement {achievement_id} wird vergeben (für {attribut_name} ≥ {benoetigter_wert})")
+                print(f"Achievement {achievement_id} wird vergeben (für {attribute_name} ≥ {required_value})")
                 
                 # Hier könntest du z. B. das Achievement dem Spieler hinzufügen
                # Zum Beispiel: self.add_achievement(achievement_id)
         return achievement_avieved
+    
+    

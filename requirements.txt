@@ -2,3 +2,4 @@ pylint
 black
 flask
 flask_cors
+requests

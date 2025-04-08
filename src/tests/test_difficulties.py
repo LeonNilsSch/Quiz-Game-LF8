@@ -12,7 +12,7 @@ class TestDifficultiesRepository(unittest.TestCase):
         self.conn = sqlite3.connect(":memory:")
         self.cursor = self.conn.cursor()
 
-        # Create required tables
+        # Creates the required tables
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS Difficulty (
                 difficultyID INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,12 +1,15 @@
 import sqlite3
 import sys
 import os
+
+# Füge den Hauptordner zum Python-Suchpfad hinzu
+# Verbindung zur SQLite-Datenbank
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 con = sqlite3.connect("Database/database.db")
-# Cursor-Objekt zum Ausführen von SQL-Befehlen
 cursor = con.cursor()
 
-# Beispiel-Tabelle erstellen
+
+# Benötigte Tabellen erstellen
 cursor.execute(
     """
 CREATE TABLE IF NOT EXISTS Category (

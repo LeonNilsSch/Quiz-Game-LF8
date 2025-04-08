@@ -21,43 +21,33 @@ class QuestionRepository(DatabaseHelper):
         """,
             (categoryid,),
         )
-
+    
         rows = self.cursor.fetchall()
-        return [row[0] for row in rows]
+        questionids = [row[0] for row in rows]
+        return questionids
 
-    def fill_game_question(self, questionids, gameid):
-        """
-        Füllt die Tabelle GameQuestion mit den Frage-IDs für ein bestimmtes Spiel.
-        """
-        for questions in questionids:
-            self.cursor.execute(
-                """ 
-            INSERT INTO GameQuestion(gameID, questionID, played) VALUES (?, ?, 0)
-            """,
-                (
-                    gameid,
-                    questions,
-                ),
-            )
-        self.con.commit()
+    # def fill_game_question(self, questionids, gameid):
+    #     """
+    #     Füllt die Tabelle GameQuestion mit den Frage-IDs für ein bestimmtes Spiel.
+    #     """
+    #     for questions in questionids:
+    #         self.cursor.execute(
+    #             """ 
+    #         INSERT INTO GameQuestion(gameID, questionID, played) VALUES (?, ?, 0)
+    #         """,
+    #             (
+    #                 gameid,
+    #                 questions,
+    #             ),
+    #         )
+    #     self.con.commit()
 
-    def get_random_questionID(self, gameID):
-        """
-        Holt eine zufällige Frage-ID aus der Tabelle GameQuestion, die noch nicht gespielt wurde.
-        """
-        self.cursor.execute(
-            """ 
-        SELECT questionID FROM GameQuestion WHERE played = 0 AND gameID = ?
-        """,
-            (gameID,),
-        )
-        rows = self.cursor.fetchall()
-
-        if rows:
-            ids = [row[0] for row in rows]
-            self.question_id = random.choice(ids)
-            return self.question_id
-        return None
+    def get_random_questionID(self, questionIDs):
+        
+        self.question_id = random.choice(questionIDs)
+        questionIDs.remove(self.question_id)
+        return self.question_id
+        
 
     def get_question(self):
         """

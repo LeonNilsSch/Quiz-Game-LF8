@@ -3,11 +3,9 @@ import os
 import random
 
 # Füge den Hauptordner `src` zum Python-Suchpfad hinzu
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import tkinter as tk
 from tkinter import messagebox
-from src.question import Question
 from repositories.question_repository import QuestionRepository
 from repositories.player_repository import PlayerRepository
 
@@ -18,9 +16,9 @@ class GameplayScreen:
         self.question_repo = QuestionRepository()
         self.current_question = None
         self.score = 0
-        self.question_ids = self.question_repo.get_questionIDs_with_Categorys(
-            self.category_id
-        )
+        self.question_ids = self.question_repo.get_random_questionID(
+            self.question_repo.get_questionIDs_with_Categorys(self.category_id))
+    
         self.current_question_index = 0
         self.time_left = 10  # Timer in Sekunden
 
@@ -64,7 +62,8 @@ class GameplayScreen:
         self.answer_frame.pack(pady=20)
 
         self.answer_buttons = []
-        for i in range(4):  # Maximal 4 Antwortmöglichkeiten
+        # Maximal 4 Antwortmöglichkeiten
+        for i in range(4):  
             btn = tk.Button(
                 self.answer_frame,
                 text="",
@@ -103,27 +102,36 @@ class GameplayScreen:
         )
         self.feedback_label.pack(pady=20)
 
+    
+    
     def load_next_question(self):
-        # Überprüfen, ob das Spiel beendet wurde
+        # Überprüfen, ob das Spiel beendet wurde und beendet die Methode
         if self.time_left <= 0:
-            return  # Beende die Methode, wenn das Spiel vorbei ist
+            return
 
         # Lade die nächste Frage
-        question_id = self.question_ids[self.current_question_index]
-        question_data = self.question_repo.get_question(question_id)
-
+        question_id = self.question_ids
+        print("ID:", question_id)
+        question_data = self.question_repo.get_question()
+        print( question_data)
         # Debugging: Überprüfen, welche Schlüssel in question_data vorhanden sind
-        print(f"Erhaltene Daten für Frage ID {question_id}: {question_data}")
+        # print(f"Erhaltene Daten für Frage ID {question_id}: {question_data}")
 
         try:
-            question_text = question_data["questionText"]
-            correct_answer = question_data["correctAnswer"]
+            question_text = question_data.get("questionText", "Keine Frage vorhanden")
+            correct_answer = question_data.get("correctAnswer", "Keine richtige Antwort")
             incorrect_answers = [
-                question_data["incorrectAnswers1"],
-                question_data["incorrectAnswers2"],
-                question_data["incorrectAnswers3"],
+                question_data.get("incorrectAnswer1", "Keine falsche Antwort 1"),
+                question_data.get("incorrectAnswer2", "Keine falsche Antwort 2"),
+                question_data.get("incorrectAnswer3", "Keine falsche Antwort 3"),
             ]
-            difficulty_id = question_data["difficultyID"]  # Schwierigkeit anhand der ID
+            difficulty_id = question_data.get("difficultyID", -1)  # Standardwert, wenn nicht vorhanden
+
+            print(f"Frage: {question_text}")
+            print(f"Richtige Antwort: {correct_answer}")
+            print(f"Falsche Antworten: {incorrect_answers}")
+            print(f"Schwierigkeitsgrad: {difficulty_id}")
+
         except KeyError as e:
             print(f"Fehlender Schlüssel in den Daten: {e}")
             self.end_game()
@@ -159,7 +167,8 @@ class GameplayScreen:
         )
 
         if hasattr(self, "difficulty_label"):
-            self.difficulty_label.destroy()  # Entferne das alte Label, falls vorhanden
+            # Entferne das alte Label, falls vorhanden
+            self.difficulty_label.destroy() 
 
         self.difficulty_label = tk.Label(
             self.root,
@@ -190,19 +199,13 @@ class GameplayScreen:
             # Zeit abgelaufen
             if self.time_left == 0:  # Verhindere mehrfaches Aufrufen von end_game
                 self.end_game()
-
+    # holt die ausgewählte Antwort, überprüft sie nach richtigkeit und schwierigkeit, und berechnet die Punkte
     def check_answer(self, selected_index):
-        # Hole die ausgewählte Antwort
         selected_answer = self.current_question["options"][selected_index]
-        # Überprüfe, ob die Antwort korrekt ist
         is_correct = selected_answer == self.current_question["correct_answer"]
-
-        # Schwierigkeit der aktuellen Frage (z. B. 1 = leicht, 2 = mittel, 3 = schwer)
         difficulty = self.current_question["difficulty"]
 
-        # Berechne die Punkte für die aktuelle Frage
         question_points = self.calculate_question_points(is_correct, difficulty, self.time_left)
-
         if is_correct:
             self.score += question_points
             self.feedback_label.config(
@@ -245,7 +248,8 @@ class GameplayScreen:
         ).pack(pady=20)
 
         # Aktualisiere den höchsten Punktestand des Spielers
-        player_id = 1  # Beispiel: Ersetze dies durch die tatsächliche Spieler-ID
+        player_id = 1# Beispiel: Ersetze dies durch die tatsächliche Spieler-ID
+        
         self.update_high_score(player_id, self.score)
 
         # Button zum Entry-Screen
@@ -277,7 +281,7 @@ class GameplayScreen:
 
     def update_high_score(self, player_id, final_score):
         player_repo = PlayerRepository()
-        player_repo.update_high_score(player_id, final_score)
+        player_repo.update_high_score(player_id,final_score)
         print(f"Game ended. Final score for player {player_id}: {final_score}")
 
     def return_to_entry_screen(self):

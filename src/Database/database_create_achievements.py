@@ -5,7 +5,7 @@ con = sqlite3.connect("Database/database.db")
 cursor = con.cursor()
 
 
-# Beispiel-Tabelle erstellen
+# Achievements in die Tabelle einpflegen
 cursor.execute(
     """INSERT INTO Achievement (achievementName, conditionType, value) VALUES ("Get 10 hard questions correct", "correctHardQuestions", 10) """
 )

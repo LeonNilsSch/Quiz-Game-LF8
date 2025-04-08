@@ -64,7 +64,7 @@ def login_screen(start_game_callback):
     frame = tk.Frame(root, bg="#1e1e1e")
     frame.place(
         relx=0.5, rely=0.5, anchor="center"
-    )  # Frame exakt in der Mitte platzieren
+    )
 
     # Benutzername
     tk.Label(

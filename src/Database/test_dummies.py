@@ -5,7 +5,7 @@ con = sqlite3.connect("Database/database.db")
 cursor = con.cursor()
 
 
-# Beispiel-Tabelle erstellen
+# Standard User erstellen
 cursor.execute(
     """INSERT INTO Player (playerPassword, Playername, playerScore,correctHardQuestions, correctMediumQuestions, correctEasyQuestions) 
                VALUES ("12345","Leon", 10,2, 40, 100) """

@@ -32,7 +32,7 @@ def choose_mode_window():
     frame.pack(expand=True)  # Allow the frame to expand and center its content
 
     # Simulating shadow effect using a slightly offset second button (first button shadow)
-    shadow_offset = 5  # Adjust this value for more or less shadow effect
+    shadow_offset = 5  
 
     # Single Player Button with Shadow
     single_player_shadow = tk.Button(
@@ -107,5 +107,5 @@ def choose_mode_window():
     window.mainloop()
 
 
-# Run the application
+
 choose_mode_window()

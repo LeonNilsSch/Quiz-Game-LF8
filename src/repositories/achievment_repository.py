@@ -2,12 +2,13 @@ from repositories.database_helper import DatabaseHelper
 
 
 class AchievmentRepository(DatabaseHelper):
-    # keine Init, da es keinen Nutzen dafür gibt, da es keine durchgehed gleiche AchievementID hier gibt, sonder diese immer Wechseln kann
+    # kein Init, da die AchievementsID wechseln kann. Dadurch entfällt der nutzen
     def get_achievment_name(self, achievementID):
         return self.get_value_from_table(
             "Achievement", "achievementName", "achievementID", achievementID
         )
-
+    
+    # Verbindet den Player zu seinen Achievements
     def fill_player_to_achievments(
         self, playerID, achievementID,
     ):
@@ -25,7 +26,8 @@ class AchievmentRepository(DatabaseHelper):
             (achievementName, conditionType, value),
         )
         self.con.commit()
-
+        
+    # holt die Anforderung zur erfüllung der Achievements
     def get_requierments(self, achievementID):
         requierments = self.get_value_from_table(
             "Achievement", "conditionType, value", "achievementID", achievementID
