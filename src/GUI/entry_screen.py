@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from category_screen import category_screen  # Importiere category_screen.py
+from achievement_screen import achievement_screen  # Importiere die Achievement-Screen-Funktion
 
 
 # Funktion, um die Kategorieauswahl zu öffnen
@@ -36,28 +37,30 @@ def entry_screen():
         bg="#2e2e2e",
     ).pack(pady=20)
 
-    # Spielen-Button
-    btn_play = tk.Button(
+    # Button zur Kategorieauswahl
+    tk.Button(
         frame,
-        text="Spiel starten",
+        text="Kategorie auswählen",
         font=btn_font,
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
         command=open_category_screen,
-    )
-    btn_play.pack(pady=20, ipadx=20, ipady=10)
+    ).pack(pady=10, ipadx=20, ipady=10)
 
-    # Beenden-Button
-    btn_exit = tk.Button(
+    # Button zu den Achievements
+    tk.Button(
         frame,
-        text="Beenden",
+        text="Achievements anzeigen",
         font=btn_font,
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=main_screen.destroy,
-    )
-    btn_exit.pack(pady=20, ipadx=20, ipady=10)
+        command=open_achievement_screen,
+    ).pack(pady=10, ipadx=20, ipady=10)
 
     main_screen.mainloop()
+
+def open_achievement_screen():
+    main_screen.destroy()  # Schließt den Entry Screen
+    achievement_screen()  # Öffnet die Achievement-Screen-Funktion
