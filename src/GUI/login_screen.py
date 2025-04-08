@@ -13,7 +13,7 @@ def login():
     con = sqlite3.connect("./Database/database.db")
     cursor = con.cursor()
 
-    cursor.execute( #muss durch einen Klassenaufruf entfert werden
+    cursor.execute(  # muss durch einen Klassenaufruf entfert werden
         "SELECT * FROM Player WHERE Playername = ? AND playerPassword = ?",
         (username, password),
     )

@@ -3,11 +3,13 @@ from repositories.database_helper import DatabaseHelper
 
 
 class QuestionRepository(DatabaseHelper):
-    
+
     def __init__(self, connection=None):
-        super().__init__(connection=connection)  # Initialisiert die Verbindung über die Basisklasse
+        super().__init__(
+            connection=connection
+        )  # Initialisiert die Verbindung über die Basisklasse
         self.question_id = None
-    
+
     def get_questionIDs_with_Categorys(self, categoryid):
         """
         Holt alle Frage-IDs für eine bestimmte Kategorie.
@@ -141,14 +143,18 @@ class QuestionRepository(DatabaseHelper):
             ),
         )
         self.con.commit()
-    
-    def update_question(self, questionID, inputField, userChange): #hier wird eine beliebe QuestionID übergeben, deswegen kein self.question_id.
-        #updatet die ausgwählte frage, mit dem Übergebenden Werten
+
+    def update_question(
+        self, questionID, inputField, userChange
+    ):  # hier wird eine beliebe QuestionID übergeben, deswegen kein self.question_id.
+        # updatet die ausgwählte frage, mit dem Übergebenden Werten
         self.update_fieldValue(
             "Question", inputField, userChange, questionID, "questionID"
         )
 
-    def delete_question(self, questionID): #hier wird eine beliebe QuestionID übergeben, deswegen kein self.question_id.
+    def delete_question(
+        self, questionID
+    ):  # hier wird eine beliebe QuestionID übergeben, deswegen kein self.question_id.
         """
         Löscht eine Frage aus der Datenbank.
         """
@@ -169,7 +175,7 @@ class QuestionRepository(DatabaseHelper):
         return
 
     def get_question_points(self):
-        #Holt die Punkte für eine bestimmte Frage basierend auf der Schwierigkeit.
+        # Holt die Punkte für eine bestimmte Frage basierend auf der Schwierigkeit.
         self.cursor.execute(
             """ SELECT d.difficultyID, d.difficultyPoints
                 FROM Difficulty d
@@ -181,5 +187,3 @@ class QuestionRepository(DatabaseHelper):
 
         rows = self.cursor.fetchone()
         return rows
-    
-    

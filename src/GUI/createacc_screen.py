@@ -22,13 +22,15 @@ def create_account_screen():
         con = sqlite3.connect("./Database/database.db")
         cursor = con.cursor()
 
-        cursor.execute("SELECT * FROM Player WHERE Playername = ?", (username,)) #muss durch einen Klassenaufruf entfert werden
+        cursor.execute(
+            "SELECT * FROM Player WHERE Playername = ?", (username,)
+        )  # muss durch einen Klassenaufruf entfert werden
         if cursor.fetchone():
             messagebox.showerror("Fehler", "Benutzername ist bereits vergeben.")
             con.close()
             return
 
-        cursor.execute( #muss durch einen Klassenaufruf entfert werden
+        cursor.execute(  # muss durch einen Klassenaufruf entfert werden
             "INSERT INTO Player (Playername, playerPassword) VALUES (?, ?)",
             (username, password),
         )

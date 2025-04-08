@@ -5,17 +5,24 @@ import sqlite3
 class PlayerRepository(DatabaseHelper):
     def __init__(self, connection=None):
         super().__init__(connection=connection)
-        self.player_id = None 
-        
+        self.player_id = None
+
     def get_playerID_by_name(self, playerName):
-        
-        self.player_id = self.get_value_from_table("Player", "playerID", "playerName", playerName)
-        return self.player_id #brauchen wir hier den Return
+
+        self.player_id = self.get_value_from_table(
+            "Player", "playerID", "playerName", playerName
+        )
+        return self.player_id  # brauchen wir hier den Return
+
     def get_score(self):
-        return self.get_value_from_table("Player", "playerScore", "playerID", self.player_id)
+        return self.get_value_from_table(
+            "Player", "playerScore", "playerID", self.player_id
+        )
 
     def get_wins(self):
-        return self.get_value_from_table("Player", "playerWins", "playerID", self.player_id)
+        return self.get_value_from_table(
+            "Player", "playerWins", "playerID", self.player_id
+        )
 
     def get_playedGames(self):
         self.cursor.execute(
@@ -43,7 +50,9 @@ class PlayerRepository(DatabaseHelper):
         rows = self.cursor.fetchall()
         return [row[0] for row in rows]
 
-    def get_playerID(self, playerName): #gibt es schon einmal, welche wollen wir genau benutzen?
+    def get_playerID(
+        self, playerName
+    ):  # gibt es schon einmal, welche wollen wir genau benutzen?
         self.get_value_from_table("Player", "playerID", "playerName", playerName)
 
     def create_user(self, playerName, playerPassword):
@@ -57,7 +66,7 @@ class PlayerRepository(DatabaseHelper):
         self.con.commit()
         return
 
-    def delete_user(self, playerID): # es kann eine beliebe PlayerID ausgewählt werden
+    def delete_user(self, playerID):  # es kann eine beliebe PlayerID ausgewählt werden
         self.cursor.execute("""DELETE FROM Player WHERE playerID = ?""", (playerID,))
         self.con.commit()
         return
@@ -84,8 +93,8 @@ class PlayerRepository(DatabaseHelper):
     #     rows = self.cursor.fetchone()
     #     print(rows[0])
     #     return rows[0]
-    
-    #update CorrectQuestionsHard, Easy, Medium
 
-    def update_playerField(self,updateField, playerID, newValue):
-       self.update_fieldValue("Player", updateField, newValue, playerID, "playerID")
+    # update CorrectQuestionsHard, Easy, Medium
+
+    def update_playerField(self, updateField, playerID, newValue):
+        self.update_fieldValue("Player", updateField, newValue, playerID, "playerID")

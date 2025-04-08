@@ -1,7 +1,8 @@
 import sqlite3
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 con = sqlite3.connect("Database/database.db")
 # Cursor-Objekt zum Ausführen von SQL-Befehlen
 cursor = con.cursor()
