@@ -28,31 +28,43 @@ class Player:
 
 
     def receive_achievement(
-    self, achievement_requirements, achievementID, player_achievements
+    self, achievementIDs, requirements_fields, required_values, player_achievements
 ):
-        requirement, required_value = achievement_requirements
-
-        # Wenn player_achievements None ist oder ein einzelner int-Wert, umwandeln
+        achievement_avieved =[]
+       # Sicherstellen, dass player_achievements eine Liste von Tupeln ist
         if player_achievements is None:
             player_achievements = []
         elif isinstance(player_achievements, int):
-            player_achievements = [(player_achievements,)]  # Ein einzelner int-Wert als Tuple in Liste umwandeln
+            player_achievements = [(player_achievements,)]
         elif isinstance(player_achievements, (list, tuple)):
-            # Falls es sich um eine Liste/Tupel handelt, aber keine Tupel, dann in (int,) umwandeln
-            player_achievements = [(ach,) if isinstance(ach, int) else ach for ach in player_achievements]
+            # Jeden Eintrag zu einem Tuple machen, falls nötig
+            player_achievements = [
+                (ach,) if isinstance(ach, int) else ach
+                for ach in player_achievements
+            ]
 
-        # Nur gültige Einträge extrahieren
-        achievement_ids = {ach[0] for ach in player_achievements if isinstance(ach, (tuple, list)) and len(ach) > 0}
+        # Set mit IDs der bereits erhaltenen Achievements
+        bereits_erhaltene_ids = {
+            eintrag[0] for eintrag in player_achievements
+            if isinstance(eintrag, (tuple, list)) and len(eintrag) > 0
+        }
 
-        # Falls Achievement bereits vorhanden ist, abbrechen
-        if achievementID in achievement_ids:
-            return
+        # Durch alle Anforderungen und zugehörigen IDs gehen
+        for achievement_id, attribut_name, benoetigter_wert in zip(achievementIDs, requirements_fields, required_values):
 
-        # Überprüfen, ob das erforderliche Attribut existiert und den Wert erreicht
-        current_value = getattr(self, requirement, None)
-        if current_value is not None and current_value >= required_value:
-            print("Achievement wird vergeben")
-            return True, achievementID
+            # Prüfen, ob dieses Achievement bereits vorhanden ist
+            if achievement_id in bereits_erhaltene_ids:
+                continue  # Dann überspringen
 
-        return False
+            # Den aktuellen Wert des Spielers für das geforderte Attribut holen
+            aktueller_wert = getattr(self, attribut_name, None)
 
+            # Wenn Attribut existiert und Wert ausreicht → Achievement vergeben
+            if aktueller_wert is not None and aktueller_wert >= benoetigter_wert:
+               
+                achievement_avieved.append(achievement_id)
+                print(f"Achievement {achievement_id} wird vergeben (für {attribut_name} ≥ {benoetigter_wert})")
+                
+                # Hier könntest du z. B. das Achievement dem Spieler hinzufügen
+               # Zum Beispiel: self.add_achievement(achievement_id)
+        return achievement_avieved

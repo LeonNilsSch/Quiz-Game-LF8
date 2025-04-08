@@ -1,5 +1,7 @@
 import sqlite3
-
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 con = sqlite3.connect("Database/database.db")
 # Cursor-Objekt zum Ausführen von SQL-Befehlen
 cursor = con.cursor()
@@ -47,7 +49,6 @@ CREATE TABLE IF NOT EXISTS Player (
     playerPassword TEXT,
     playerName TEXT UNIQUE,
     playerScore INTEGER,
-    playerWins TEXT,
     playedGames INTEGER,
     correctHardQuestions INTEGER,
     correctMediumQuestions INTEGER,
@@ -60,11 +61,8 @@ cursor.execute(
     """
 CREATE TABLE IF NOT EXISTS Game (
     gameID INTEGER PRIMARY KEY AUTOINCREMENT,
-    winnerID INTEGER,
     gameDate DATE,
     gameKey TEXT,
-    FOREIGN KEY (winnerID) REFERENCES Player(playerID)
-    
 );
 """
 )
@@ -96,7 +94,6 @@ cursor.execute(
 CREATE TABLE IF NOT EXISTS Achievement (
     achievementID INTEGER PRIMARY KEY AUTOINCREMENT,
     achievementName TEXT UNIQUE,
-    achievementPoints INTEGER,
     conditionType TEXT,
     value INTEGER
 );
