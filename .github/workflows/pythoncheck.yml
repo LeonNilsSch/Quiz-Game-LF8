@@ -49,7 +49,6 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin main
           git checkout -B black-auto-format origin/main
-          black .
           git add .
           git diff --quiet && echo "No changes to commit" || git commit -m "Auto-format code with Black"
           git push origin black-auto-format --force
