@@ -7,13 +7,13 @@ cursor = con.cursor()
 
 # Beispiel-Tabelle erstellen
 cursor.execute(
-    """INSERT INTO Achievement (achievementName, achievementPoints, conditionType, value) VALUES ("Get 10 hard questions correct",40, "correctHardQuestions", 10) """
+    """INSERT INTO Achievement (achievementName, conditionType, value) VALUES ("Get 10 hard questions correct", "correctHardQuestions", 10) """
 )
 cursor.execute(
-    """INSERT INTO Achievement (achievementName, achievementPoints, conditionType, value) VALUES ("Get 10 medium questions correct",20, "correctMediumQuestions", 10) """
+    """INSERT INTO Achievement (achievementName, conditionType, value) VALUES ("Get 10 medium questions correct", "correctMediumQuestions", 10) """
 )
 cursor.execute(
-    """INSERT INTO Achievement (achievementName, achievementPoints, conditionType, value) VALUES ("Get 10 easy questions correct",5, "correctEasyQuestions", 10) """
+    """INSERT INTO Achievement (achievementName, conditionType, value) VALUES ("Get 10 easy questions correct", "correctEasyQuestions", 10) """
 )
 # Änderungen speichern und Verbindung schließen
 con.commit()

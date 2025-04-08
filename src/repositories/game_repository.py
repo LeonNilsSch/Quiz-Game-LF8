@@ -14,7 +14,7 @@ class GameRepository(DatabaseHelper):
 
         # Verwende den korrekten Spaltennamen "gameDate"
         cursor.execute(
-            "INSERT INTO Game (gameDate, gameKey, winnerID) VALUES (?, ?, ?)",
+            "INSERT INTO Game (gameDate, gameKey) VALUES (?, ?, ?)",
             (dateForm, game_key, creatorID),
         )
         con.commit()
