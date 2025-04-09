@@ -1,6 +1,9 @@
 import sqlite3
+import sys
+import os
 
-con = sqlite3.connect("Database/database.db")
+db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "Database/database.db"))
+con = sqlite3.connect(db_path)
 cursor = con.cursor()
 
 
@@ -9,16 +12,12 @@ class Player:
     def __init__(
         self,
         player_id: int,
-        name: str,
-        player_password,
         score,
         correctHardQuestions,
         correctMediumQuestions,
         correctEasyQuestions,
     ):
-        self.name = name
         self.player_id = player_id
-        self.password = player_password
         self.score = score
         self.correctHardQuestions = correctHardQuestions
         self.correctMediumQuestions = correctMediumQuestions
@@ -63,7 +62,7 @@ class Player:
                 achievement_avieved.append(achievement_id)
                 print(f"Achievement {achievement_id} wird vergeben (für {attribute_name} ≥ {required_value})")
                 
-                # Hier könntest du z. B. das Achievement dem Spieler hinzufügen
+                # Hier könnte man z. B. das Achievement dem Spieler hinzufügen
                # Zum Beispiel: self.add_achievement(achievement_id)
         return achievement_avieved
     

@@ -41,48 +41,48 @@ class TestPlayerRepository(unittest.TestCase):
 
     def test_create_Player(self):
         # given
-        playerName = "Marsle"
-        playerPass = "123456"
+        player_name = "Marsle"
+        player_pass = "123456"
 
         # when
         # Fügt den Player in die Datenbank und guckt ob es erfolgreich war
-        self.player.create_user(playerName, playerPass)
+        self.player.create_user(player_name, player_pass)
         self.cursor.execute(
             "SELECT playerName FROM Player WHERE playerName = ? AND playerPassword = ?",
-            (playerName, playerPass),
+            (player_name, player_pass),
         )
         result = self.cursor.fetchone()
         # then
         self.assertIsNotNone(result)  # Prüfen, ob der Player existiert
-        self.assertEqual(result[0], playerName, playerPass)
+        self.assertEqual(result[0], player_name, player_pass)
 
     def test_update_playerField(self):
         # given
-        playerID = 1
-        # playerName = "Marsl"
-        newValue = "Leon"
+        player_id = 1
+        # player_name = "Marsl"
+        new_value = "Leon"
 
         # when
-        self.player.update_fieldValue(
-            "Player", "playerName", newValue,playerID , "playerID"
+        self.player.Update_field_value(
+            "Player", "player_name", new_value,player_id , "playerID"
         )
 
         self.cursor.execute(
-            """SELECT playerName FROM Player WHERE playerID = ?""", (playerID,)
+            """SELECT playerName FROM Player WHERE playerID = ?""", (player_id,)
         )
         result = self.cursor.fetchone()
 
         # then
         self.assertIsNotNone(result)
-        self.assertEqual(result[0], newValue)
+        self.assertEqual(result[0], new_value)
 
     def test_delete_user(self):
         # given
-        playerID = 1
-        playerName = "Marsl"
+        player_id = 1
+        player_name = "Marsl"
 
-        self.player.delete_user(playerID)
-        self.assertIsNone(self.player.get_playerID(playerName))
+        self.player.delete_user(player_id)
+        self.assertIsNone(self.player.get_playerID(player_name))
 
     def tearDown(self):
         """Schließt die Verbindung nach jedem Test."""

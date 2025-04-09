@@ -2,14 +2,14 @@ import sqlite3
 import sys
 import os
 
-# Füge den Hauptordner zum Python-Suchpfad hinzu
-# Verbindung zur SQLite-Datenbank
+# Add the main folder to the Python search path
+# Connection to the SQLite database
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 con = sqlite3.connect("Database/database.db")
 cursor = con.cursor()
 
 
-# Benötigte Tabellen erstellen
+# Create required tables
 cursor.execute(
     """
 CREATE TABLE IF NOT EXISTS Category (
@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS Player (
     playerPassword TEXT,
     playerName TEXT UNIQUE,
     playerScore INTEGER,
-    playedGames INTEGER,
     correctHardQuestions INTEGER,
     correctMediumQuestions INTEGER,
     correctEasyQuestions INTEGER
@@ -82,6 +81,6 @@ CREATE TABLE IF NOT EXISTS PlayerToAchievement (
 """
 )
 
-# Änderungen speichern und Verbindung schließen
+# Save changes and close connection
 con.commit()
 con.close()

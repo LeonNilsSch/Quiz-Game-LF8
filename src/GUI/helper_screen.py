@@ -1,57 +1,57 @@
 import tkinter as tk
 
 
-def helper_screen():
-    # Hauptfenster erstellen
+def helperScreen():
+    # Create main window
     root = tk.Tk()
-    root.title("Hilfestellungen")
+    root.title("Help Instructions")
     root.geometry("1200x800")
-    root.configure(bg="#2e2e2e")  # Hintergrundfarbe
+    root.configure(bg="#2e2e2e")
 
-    # Schriftarten und Farben
+    # Fonts and colors
     label_font = ("Helvetica", 16, "bold")
     text_font = ("Helvetica", 14)
     btn_font = ("Helvetica", 14, "bold")
-    btn_bg = "#444444"  # Dunkleres Grau für Buttons
-    btn_fg = "#DDDDDD"  # Hellgrauer Text
+    btn_bg = "#444444" 
+    btn_fg = "#DDDDDD" 
 
-    # Titel
+    # Title
     tk.Label(
         root,
-        text="Hilfestellungen für das Quiz-Spiel",
+        text="Help Instructions for the Quiz Game",
         font=label_font,
         fg="white",
         bg="#2e2e2e",
     ).pack(pady=20)
 
-    # Hilfetext
+    # Help text
     help_text = """
-    Willkommen zum Quiz-Spiel! Hier sind einige Tipps und Anweisungen, um dir zu helfen:
+    Welcome to the Quiz Game! Here are some tips and instructions to help you:
 
-    1. Ziel des Spiels:
-       - Beantworte so viele Fragen wie möglich korrekt, um Punkte zu sammeln.
-       - Jede Frage hat eine bestimmte Schwierigkeit (leicht, mittel, schwer), die die Punkte beeinflusst.
+    1. Objective of the Game:
+       - Answer as many questions as possible correctly to earn points.
+       - Each question has a specific difficulty level (easy, medium, hard) that affects the points.
 
-    2. Steuerung:
-       - Wähle die richtige Antwort aus den vier Optionen aus.
-       - Du kannst die Enter-Taste drücken, um dich einzuloggen.
-       - Du kannst den Key "h" drücken um die Hilfestellungen zu öffnen.
+    2. Controls:
+       - Choose the correct answer from the four options.
+       - You can press the Enter key to submit your answer.
+       - You can press the "h" key to open the help instructions.
 
-    3. Zeitlimit:
-       - Jede Frage hat ein Zeitlimit von 60 Sekunden. Beantworte die Frage, bevor die Zeit abläuft.
+    3. Time Limit:
+       - Each question has a time limit of 60 seconds. Answer the question before the time runs out.
 
-    4. Kategorien:
-       - Wähle eine Kategorie aus, um Fragen zu einem bestimmten Thema zu beantworten.
-       - Beispiele für Kategorien: Geografie, Videospiele, Allgemeinwissen.
+    4. Categories:
+       - Choose a category to answer questions on a specific topic.
+       - Examples of categories: Geography, Video Games, General Knowledge.
 
-    5. Punkte:
-       - Für jede richtige Antwort erhältst du Punkte basierend auf der Schwierigkeit der Frage.
-       - Falsche Antworten geben keine Punkte.
+    5. Points:
+       - For each correct answer, you earn points based on the difficulty of the question.
+       - Incorrect answers do not give any points.
 
-    6. Spiel beenden:
-       - Du kannst das Spiel jederzeit über den "Spiel beenden"-Button oben rechts beenden.
+    6. End Game:
+       - You can end the game at any time using the "End Game" button at the top right.
 
-    Viel Erfolg und hab Spaß beim Spielen!
+    Good luck and have fun playing!
     """
 
     tk.Label(
@@ -64,19 +64,19 @@ def helper_screen():
         wraplength=1000,
     ).pack(pady=20)
 
-    # Zurück-Button
+    # Back button
     tk.Button(
         root,
-        text="Zurück zum Hauptmenü",
+        text="Back to Main Menu",
         font=btn_font,
         bg=btn_bg,
         fg=btn_fg,
         relief="flat",
-        command=root.destroy,  # Schließt den Hilfebildschirm
+        command=root.destroy,  # Closes the help screen
     ).pack(pady=20, ipadx=20, ipady=10)
 
     root.mainloop()
 
 
-if __name__ == "__main__":
-    helper_screen()
+# if __name__ == "__main__":
+#     helperScreen()

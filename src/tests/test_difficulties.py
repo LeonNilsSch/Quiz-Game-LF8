@@ -34,25 +34,25 @@ class TestDifficultiesRepository(unittest.TestCase):
 
     def test_update_points(self):
         # given
-        difficultyID = 1
+        difficulty_id = 1
         new_points = 200
 
         # when
-        self.difficulties.update_points(new_points, difficultyID)
+        self.difficulties.Update_points(new_points, difficulty_id)
         
         # then
-        self.cursor.execute("SELECT difficultyPoints FROM Difficulty WHERE difficultyID = ?", (difficultyID,))
+        self.cursor.execute("SELECT difficultyPoints FROM Difficulty WHERE difficultyID = ?", (difficulty_id,))
         result = self.cursor.fetchone()
         self.assertIsNotNone(result)
         self.assertEqual(result[0], new_points)
 
     def test_get_difficulty_points(self):
         # given
-        difficultyID = 1
+        difficulty_id = 1
         expected_points = 100
 
         # when
-        points = self.difficulties.get_difficulty_points(difficultyID)
+        points = self.difficulties.Get_difficulty_points(difficulty_id)
 
         # then
         self.assertEqual(points, expected_points)
@@ -66,7 +66,7 @@ class TestDifficultiesRepository(unittest.TestCase):
         self.conn.commit()
 
         # when
-        difficulties = self.difficulties.get_all_difficulties()
+        difficulties = self.difficulties.Get_all_difficulties()
         self.cursor.execute("SELECT difficultyName FROM Difficulty")
         result = self.cursor.fetchall()
         result = [row[0] for row in result]

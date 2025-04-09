@@ -7,40 +7,48 @@ class DifficultyRepository(DatabaseHelper):
         super().__init__(connection=connection)  # Initialisiert die Verbindung über die Basisklasse
         self.question_id = None
     
-    def get_difficultyId_from_questionId(self, questionID):
-        return self.get_value_from_table(
-            "Question", "difficultyID", "questionID", questionID
+    def Get_difficultyId_from_questionId(self, question_id):
+        return self.Get_value_from_table(
+            "Question", "difficultyID", "questionID", question_id
         )
 
-    def get_difficulty_points(self, difficultyID):
-        return self.get_value_from_table(
-            "Difficulty", "difficultyPoints", "difficultyID", difficultyID
+    def Get_difficulty_points(self, difficulty_id):
+        return self.Get_value_from_table(
+            "Difficulty", "difficultyPoints", "difficultyID", difficulty_id
         )
 
-    def get_difficultyid_by_difficultyname(self, difficultyName):
-        return self.get_value_from_table(
-            "Difficulty", "difficultyID", "difficultyName", difficultyName
+    def Get_difficultyid_by_difficultyname(self, difficulty_name):
+        return self.Get_value_from_table(
+            "Difficulty", "difficultyID", "difficultyName", difficulty_name
         )
 
-    def get_all_difficulties(self):
-        self.cursor.execute(
-            """ 
-        SELECT * FROM Difficulty
-        """
-        )
+    
+    def Get_all_difficulties(self):
+        self.cursor.execute("SELECT * FROM Difficulty")
         difficulties = self.cursor.fetchall()
-        print(difficulties)
-        return [difficulties[0] for difficulties in difficulties]
+
+        # Mapping von Schwierigkeit zu Farben
+        color_map = {
+            "easy": "green",
+            "medium": "yellow",
+            "hard": "red"
+        }
+
+        # Mapping zusammenbauen
+        difficulty_mapping = {
+            diff[0]: (diff[1], color_map.get(diff[1], "gray")) for diff in difficulties}
+
+        return difficulty_mapping
     
     
-    def update_points(self, newPoints, difficultyID):
+    def Update_points(self, new_points, difficulty_id):
         self.cursor.execute(
             """ 
         UPDATE Difficulty SET difficultyPoints = ? WHERE difficultyID = ?
         """,
             (
-                newPoints,
-                difficultyID,
+                new_points,
+                difficulty_id,
             ),
         )
         self.con.commit()

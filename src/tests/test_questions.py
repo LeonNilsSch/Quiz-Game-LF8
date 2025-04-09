@@ -44,7 +44,7 @@ class TestQuestionsRepository(unittest.TestCase):
         self.conn.commit()
         
     def test_create_question(self):
-        #givene
+        #given
         """Testet, ob eine Frage erfolgreich hinzugefügt werden kann."""
         new_question = "Was ist die Hauptstadt von Deutschland?"
 
@@ -65,21 +65,22 @@ class TestQuestionsRepository(unittest.TestCase):
     def test_update_question(self):
         #given
         field = "question"
-        newData = "Was ist die Stadt mit den meisten Einwohnern in Deutschland"
-        questionID = 1
+        new_data = "Was ist die Stadt mit den meisten Einwohnern in Deutschland"
+        question_id = 1
+        
         #when
-        self.questions.update_question(questionID, field, newData)
-        self.cursor.execute("SELECT question FROM Question WHERE questionID = ?", (questionID,))
+        self.questions.update_question(question_id, field, new_data)
+        self.cursor.execute("SELECT question FROM Question WHERE questionID = ?", (question_id,))
         result = self.cursor.fetchone()
+        
         #then
-        self.assertIsNotNone(result)  # Prüfen, ob die Frage existiert
-        self.assertEqual(result[0], newData)  
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], new_data)  
 
     def test_remove_question(self):
-        # Testet, ob eine Frage erfolgreich entfernt wird
-        questionID = 1
-        self.questions.delete_question(questionID)
-        self.assertIsNone(self.questions.get_question())
+        question_id = 1
+        self.questions.Delete_question(question_id)
+        self.assertIsNone(self.questions.Get_question())
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
