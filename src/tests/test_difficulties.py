@@ -52,7 +52,7 @@ class TestDifficultiesRepository(unittest.TestCase):
         expected_points = 100
 
         # when
-        points = self.difficulties.Get_difficulty_points(difficulty_id)
+        points = self.difficulties.get_difficulty_infos("difficultyPoints","difficultyID",difficulty_id)
 
         # then
         self.assertEqual(points, expected_points)

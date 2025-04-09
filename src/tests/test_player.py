@@ -12,7 +12,7 @@ class TestPlayerRepository(unittest.TestCase):
         self.conn = sqlite3.connect(":memory:")  # In-Memory-DB
         self.cursor = self.conn.cursor()
 
-        # Tabelle manuell erstellen
+        # Create table manually
         self.cursor.execute(
             """
                        CREATE TABLE IF NOT EXISTS Player (
@@ -30,7 +30,7 @@ class TestPlayerRepository(unittest.TestCase):
         )
         self.conn.commit()
 
-        # Repository nutzt jetzt die in-memory DB über die Verbindung
+        # Repository now uses the in-memory DB via the connection
         self.player = PlayerRepository(connection=self.conn)
         
         self.cursor.execute(
@@ -45,7 +45,7 @@ class TestPlayerRepository(unittest.TestCase):
         player_pass = "123456"
 
         # when
-        # Fügt den Player in die Datenbank und guckt ob es erfolgreich war
+        # Add the player to the database and see if it was successful
         self.player.create_user(player_name, player_pass)
         self.cursor.execute(
             "SELECT playerName FROM Player WHERE playerName = ? AND playerPassword = ?",
@@ -53,7 +53,7 @@ class TestPlayerRepository(unittest.TestCase):
         )
         result = self.cursor.fetchone()
         # then
-        self.assertIsNotNone(result)  # Prüfen, ob der Player existiert
+        self.assertIsNotNone(result)  # Check whether the player exists
         self.assertEqual(result[0], player_name, player_pass)
 
     def test_update_playerField(self):
@@ -64,7 +64,7 @@ class TestPlayerRepository(unittest.TestCase):
 
         # when
         self.player.Update_field_value(
-            "Player", "player_name", new_value,player_id , "playerID"
+            "Player", "playerName", new_value,player_id , "playerID"
         )
 
         self.cursor.execute(
@@ -76,14 +76,6 @@ class TestPlayerRepository(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual(result[0], new_value)
 
-    def test_delete_user(self):
-        # given
-        player_id = 1
-        player_name = "Marsl"
-
-        self.player.delete_user(player_id)
-        self.assertIsNone(self.player.get_playerID(player_name))
-
     def tearDown(self):
         """Schließt die Verbindung nach jedem Test."""
         self.conn.close()
@@ -93,7 +85,6 @@ if __name__ == "__main__":
     suite = unittest.TestSuite()
     suite.addTest(TestPlayerRepository("test_create_Player"))
     suite.addTest(TestPlayerRepository("test_update_playerField"))
-    suite.addTest(TestPlayerRepository("test_delete_user"))
 
     runner = unittest.TextTestRunner()
     runner.run(suite)

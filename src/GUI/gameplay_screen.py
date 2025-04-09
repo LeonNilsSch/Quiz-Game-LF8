@@ -19,12 +19,12 @@ class GameplayScreen:
         self.category_id = category_id
         self.question_repo = QuestionRepository()
         self.player_repo = player_repo
-        self.playerid = None
+        self.player_id = None
         self.current_question = None
         self.score = 0
         self.question_id = None
         self.not_answert = self.question_repo.Get_questionids_with_categorys(self.category_id)
-        self.time_left = 60  # Timer in seconds
+        self.time_left = 30  # Timer in seconds
 
         # Initialises the main window
         self.root = tk.Tk()
@@ -39,14 +39,14 @@ class GameplayScreen:
         self.btn_fg = "#DDDDDD"
 
         # Creates GUI elements
-        self.create_widgets()
+        self.Create_widgets()
 
         # Loads first question
-        self.loaext_question()
+        self.Load_next_question()
 
         self.root.mainloop()
 
-    def createWidgets(self):
+    def Create_widgets(self):
         # Frame for the question
         self.question_frame = tk.Frame(self.root, bg="#2e2e2e")
         self.question_frame.pack(pady=20)
@@ -119,7 +119,7 @@ class GameplayScreen:
         self.end_game_button.place(relx=1.0, rely=0.0, anchor="ne", x=-10, y=10)
     
     
-    def loadNextuestion(self):
+    def Load_next_question(self):
         # Checks whether the game has ended
         if self.time_left <= 0:
             return
@@ -226,7 +226,7 @@ class GameplayScreen:
         difficulty = self.current_question["difficulty"]
         difficulty_repo = DifficultyRepository()
         difficulty_name = difficulty_repo.Get_value_from_table("Difficulty", "difficultyName", "difficultyID",difficulty)
-        question_points = difficulty_repo.Get_difficulty_points(difficulty)
+        question_points = difficulty_repo.get_difficulty_infos("difficultyPoints","difficultyID",difficulty)
         # print("difficulty 2", difficulty)
         # question_points = self.calculate_question_points(is_correct, difficulty, self.time_left)
        
@@ -250,9 +250,9 @@ class GameplayScreen:
                 field = 'correctHardQuestions'
             else:
                 raise ValueError("Invalid difficulty: " + str(difficulty_name))
-            old_value = self.player_repo.get_playerfield_info(field)
+            old_value = self.player_repo.Get_playerfield_info(field)
             new_value = old_value + 1
-            self.player_repo.update_playerField(field, new_value) 
+            self.player_repo.Update_player_field(field, new_value) 
         else:
             self.feedback_label.config(
                     text=f"Wrong! The right answer was: {self.current_question['correct_answer']}",
@@ -263,23 +263,24 @@ class GameplayScreen:
         self.score_label.config(text=f"Points: {self.score}")
 
         # Loads the next question after a short delay
-        self.next_question_after_id = self.root.after(2000, self.loNext_question)
+        self.next_question_after_id = self.root.after(2000, self.Load_next_question)
 
-    def check_for_achievement(self, player_data):
+    #
+    def Check_for_achievement(self, player_data):
          
         achievment_repo =AchievmentRepository()
         achievmentsInfos=achievment_repo.Get_all_achievements()
         
         self.player = Player(
-                            player_id=player_data[0],  # player_id = 3
-                            score=player_data[1],  # score = 1580
-                            correctHardQuestions=player_data[2],  # correctHardQuestions = 10
-                            correctMediumQuestions=player_data[3],  # correctMediumQuestions = 10
-                            correctEasyQuestions=player_data[4]  # correctEasyQuestions = 10
+                            player_id=self.player_id,
+                            score=player_data[1],  
+                            correctHardQuestions=player_data[2],
+                            correctMediumQuestions=player_data[3],
+                            correctEasyQuestions=player_data[4] 
                             )
 
-        player_achievements = self.player_repo.get_all_player_achievements()
-        check_achievment = self.player.receive_achievement(achievmentsInfos[0],achievmentsInfos[1], achievmentsInfos[2], player_achievements)
+        player_achievements = self.player_repo.Get_all_player_achievements()
+        check_achievment = self.player.Receive_achievement(achievmentsInfos[0],achievmentsInfos[1], achievmentsInfos[2], player_achievements)
 
         if check_achievment:
             achievment_repo.Fill_player_to_achievments(
@@ -323,11 +324,12 @@ class GameplayScreen:
 
         # Updates the player's highest score
         playerData = self.player_repo.Get_value_from_table("Player","playerID, playerScore, correctHardQuestions,correctMediumQuestions,correctEasyQuestions","playerID",self.player_repo.Get_player_id())
-        self.playerid = playerData[0]
+        self.player_id = playerData[0]
         
-        self.update_high_score(self.player_id, self.score)
-        self.check_for_achievement(playerData)
-        # Button to the entry screen
+        self.Update_high_score()
+        self.Check_for_achievement(playerData)
+       
+        # Button to go back to the main screen
         tk.Button(
             self.root,
             text="Back to Mainmenu",
@@ -346,17 +348,21 @@ class GameplayScreen:
             bg=self.btn_bg,
             fg=self.btn_fg,
             relief="flat",
-            command=self.show_leaderboard,
+            command=self.Show_leaderboard,
         ).pack(pady=20, ipadx=20, ipady=10)
         
         
+    def return_to_entryScreen(self):
+        from GUI.entry_screen import entryScreen  # Dynamischer Import, um zirkuläre Abhängigkeiten zu vermeiden
+        self.root.destroy()  # Schließt das aktuelle Fenster
+        entryScreen(self.player_repo)  # Öffnet den Entry Screen und übergibt das Player Repository# 
 
-    def show_leaderboard(self):
+    def Show_leaderboard(self):
         self.root.destroy()
-        leaderboard_screen(self.player_repo)  # Starts the leaderboard screen
+        leaderboardScreen(self.player_repo)  # Starts the leaderboard screen
 
-    def update_high_score(self, player_id,final_score):
-        self.player_repo.update_high_score(player_id,final_score)
-        print(f"Game ended. Final score for player {player_id}: {final_score}")
+    def Update_high_score(self):
+        self.player_repo.Update_high_score(self.player_id,self.score)
+        print(f"Game ended. Final score for player {self.player_id}: {self.score}")
     
    

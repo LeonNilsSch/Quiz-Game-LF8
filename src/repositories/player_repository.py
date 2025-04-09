@@ -47,7 +47,7 @@ class PlayerRepository(DatabaseHelper):
     def Update_player_field(self,update_field, new_value):
        self.Update_field_value("Player", update_field, new_value, self.player_id, "playerID")
     
-    def create_User(self, player_name, player_password):
+    def create_user(self, player_name, player_password):
         self.cursor.execute(
             """ INSERT INTO Player(playerName, playerPassword) VALUES (?,?)""",
             (

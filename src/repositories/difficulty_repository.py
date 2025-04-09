@@ -7,20 +7,9 @@ class DifficultyRepository(DatabaseHelper):
         super().__init__(connection=connection)  # Initialisiert die Verbindung über die Basisklasse
         self.question_id = None
     
-    def Get_difficultyId_from_questionId(self, question_id):
+    def get_difficulty_infos(self, get_field,search_field, search_field_value):
         return self.Get_value_from_table(
-            "Question", "difficultyID", "questionID", question_id
-        )
-
-    def Get_difficulty_points(self, difficulty_id):
-        return self.Get_value_from_table(
-            "Difficulty", "difficultyPoints", "difficultyID", difficulty_id
-        )
-
-    def Get_difficultyid_by_difficultyname(self, difficulty_name):
-        return self.Get_value_from_table(
-            "Difficulty", "difficultyID", "difficultyName", difficulty_name
-        )
+            "Difficulty", get_field, search_field, search_field_value)
 
     
     def Get_all_difficulties(self):

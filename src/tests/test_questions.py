@@ -2,8 +2,7 @@ import os
 import sys
 import sqlite3
 import unittest
-#from ..repositories.database_helper import DatabaseHelper
-#from repositories.question_repository import QuestionRepository
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from repositories.question_repository import QuestionRepository
 
@@ -16,7 +15,7 @@ class TestQuestionsRepository(unittest.TestCase):
         self.conn = sqlite3.connect(":memory:")  # In-Memory-DB
         self.cursor = self.conn.cursor()
 
-        # Tabelle manuell erstellen
+        # Create table manually
         self.cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS Question (
@@ -33,13 +32,16 @@ class TestQuestionsRepository(unittest.TestCase):
         )
         self.conn.commit()
 
-         # Repository nutzt jetzt die in-memory DB über die Verbindung
+         # Repository now uses the in-memory DB via the connection
         self.questions = QuestionRepository(connection=self.conn)
 
-        # Füge eine Beispiel-Frage hinzu, die in den Tests verwendet wird
+        # Add a sample question that will be used in the tests
         self.cursor.execute(
-            "INSERT INTO Question (categoryID, difficultyID, question, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (1, 1, "Was ist die Hauptstadt von Frankreich?", "Paris", "Berlin", "Madrid", "Rom")
+            """
+            INSERT INTO Question (question, categoryID, difficultyID, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            ("Was ist die Hauptstadt von Frankreich?", 1, 1, "Paris", "Berlin", "Madrid", "Rom"),
         )
         self.conn.commit()
         
@@ -49,8 +51,8 @@ class TestQuestionsRepository(unittest.TestCase):
         new_question = "Was ist die Hauptstadt von Deutschland?"
 
         #when
-        # Hier rufst du einfach die Methode auf, die den SQL-Befehl enthält
-        self.questions.create_question(new_question, 1, 1, "Berlin", "Hamburg", "München", "Bielefeld")
+        # Here you simply call the method that contains the SQL command
+        self.questions.Create_question(new_question, 1, 1, "Berlin", "Hamburg", "München", "Bielefeld")
         
         # Überprüfe, ob die Frage in der Datenbank ist
         self.cursor.execute("SELECT question FROM Question WHERE question = ?", (new_question,))
@@ -69,7 +71,7 @@ class TestQuestionsRepository(unittest.TestCase):
         question_id = 1
         
         #when
-        self.questions.update_question(question_id, field, new_data)
+        self.questions.Update_question(question_id, new_data)
         self.cursor.execute("SELECT question FROM Question WHERE questionID = ?", (question_id,))
         result = self.cursor.fetchone()
         

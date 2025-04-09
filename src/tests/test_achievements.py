@@ -10,7 +10,7 @@ from player import Player
 
 
 class TestAchievementRepository(unittest.TestCase):
-    def Set_up(self):
+    def setUp(self):
         """Creates a temporary in-memory SQLite database for testing."""
         self.conn = sqlite3.connect(":memory:")
         self.cursor = self.conn.cursor()
@@ -73,7 +73,7 @@ class TestAchievementRepository(unittest.TestCase):
                 )
         self.conn.commit()
         
-    def Test_get_player_data(self):
+    def test_get_player_data(self):
         #given
         player_id = 1
         password =12345
@@ -99,7 +99,7 @@ class TestAchievementRepository(unittest.TestCase):
         self.assertEqual(correct_medium, player_data[3])
         self.assertEqual(correct_easy, player_data[4])
         
-    def Test_get_all_references(self): 
+    def test_get_all_references(self): 
         achievment_ids = [1,2]
         condition_types = ["correctHardQuestions","correctMediumQuestions"]
         values= [10,10]
@@ -110,7 +110,7 @@ class TestAchievementRepository(unittest.TestCase):
         self.assertEqual(values, all_achievements[2])
         
        
-    def Test_get_all_player_achievements(self):
+    def test_Get_all_player_achievements(self):
         password =12345
         name = "Marsl"
         achievment_nr = 1
@@ -121,7 +121,7 @@ class TestAchievementRepository(unittest.TestCase):
         self.assertEqual(achievment_nr, player_achievements)
     
     
-    def Test_receive_achievement(self):
+    def test_receive_achievement(self):
         password = 12345
         name = "Marsl"
         achievements_achieved = [2]
@@ -140,7 +140,7 @@ class TestAchievementRepository(unittest.TestCase):
                     )
         
         
-        achievments_given = player.receive_achievement(all_achievements[0],all_achievements[1], all_achievements[2], player_achievements)
+        achievments_given = player.Receive_achievement(all_achievements[0],all_achievements[1], all_achievements[2], player_achievements)
         self.assertEqual(achievements_achieved, achievments_given)
 
     def test_fill_player_to_achievments(self):
@@ -161,9 +161,9 @@ class TestAchievementRepository(unittest.TestCase):
         
 if __name__ == '__main__':
     suite = unittest.TestSuite()
-    suite.addTest(TestAchievementRepository("Test_get_player_data"))
-    suite.addTest(TestAchievementRepository("get_all_achievements"))
-    suite.addTest(TestAchievementRepository("Test_get_all_player_achievements"))
+    suite.addTest(TestAchievementRepository("test_get_player_data"))
+    suite.addTest(TestAchievementRepository("test_get_all_achievements"))
+    suite.addTest(TestAchievementRepository("test_Get_all_player_achievements"))
     suite.addTest(TestAchievementRepository("test_fill_player_to_achievments"))
                  
     runner = unittest.TextTestRunner()            
