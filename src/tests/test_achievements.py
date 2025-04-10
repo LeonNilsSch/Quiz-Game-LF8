@@ -132,11 +132,11 @@ class TestAchievementRepository(unittest.TestCase):
         player_data = self.player_repo.Get_value_from_table("Player","playerID, playerScore, correctHardQuestions,correctMediumQuestions,correctEasyQuestions","playerID",playerID_for_ach)
         all_achievements = self.achievement.Get_all_achievements()
         player = Player(
-                        player_id=player_data[0],  # player_id = 3
-                        score=player_data[1],  # score = 1580
-                        correctHardQuestions=player_data[2],  # correctHardQuestions = 10
-                        correctMediumQuestions=player_data[3],  # correctMediumQuestions = 10
-                        correctEasyQuestions=player_data[4]  # correctEasyQuestions = 10
+                        player_id=player_data[0], 
+                        score=player_data[1], 
+                        correctHardQuestions=player_data[2],  
+                        correctMediumQuestions=player_data[3], 
+                        correctEasyQuestions=player_data[4]  
                     )
         
         

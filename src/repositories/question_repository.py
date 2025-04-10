@@ -29,9 +29,8 @@ class QuestionRepository(DatabaseHelper):
         
 
     def Get_question(self):
-        """
-        Retrieves the question and the corresponding answers from the database.
-        """
+        # Retrieves the question and the corresponding answers from the database.
+        
         self.cursor.execute(
             """ 
         SELECT question, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3, difficultyID
@@ -67,7 +66,7 @@ class QuestionRepository(DatabaseHelper):
         return row[0] if row else None
 
     def Create_question(self, question, category_id, difficulty_id, correct_answer, incorrect_answer1, incorrect_answer2, incorrect_answer3):
-        """Fügt eine neue Frage in die Datenbank ein."""
+        # Fügt eine neue Frage in die Datenbank ein.
         self.cursor.execute(
             """
             INSERT INTO Question (question, categoryID, difficultyID, correctAnswer, incorrectAnswers1, incorrectAnswers2, incorrectAnswers3)
@@ -136,9 +135,8 @@ class QuestionRepository(DatabaseHelper):
             raise Exception(f"Error updating the question: {e}")
 
     def Delete_question(self, question_id):
-        """
-        Deletes a question from the question table based on the question ID.
-        """
+        # Deletes a question from the question table based on the question ID.
+    
         try:
             self.cursor.execute(
                 """

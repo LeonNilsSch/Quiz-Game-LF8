@@ -20,15 +20,6 @@ class AchievmentRepository(DatabaseHelper):
             self.con.commit()
             print("You have achieved a new achievements")
 
-    def Create_new_achievments(self, achievement_name, condition_type, value):
-        self.cursor.execute(
-            """INSERT INTO Achievement (achievementName, conditionType, value) VALUES (?, ?,?) """,
-            (achievement_name, condition_type, value),
-        )
-        self.con.commit()
-        
-   
-
     # Gets the requirement to fulfil the Achievements
     def Get_requierments(self, achievement_id):
         requierments = self.Get_value_from_table(
@@ -36,8 +27,6 @@ class AchievmentRepository(DatabaseHelper):
         )
         print(requierments)
         return requierments
-    
-    
     
     def Get_all_achievements(self):
         self.cursor.execute(""" SELECT * FROM Achievement""")
