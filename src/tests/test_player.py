@@ -46,7 +46,7 @@ class TestPlayerRepository(unittest.TestCase):
 
         # when
         # Add the player to the database and see if it was successful
-        self.player.create_user(player_name, player_pass)
+        self.player.Create_user(player_name, player_pass)
         self.cursor.execute(
             "SELECT playerName FROM Player WHERE playerName = ? AND playerPassword = ?",
             (player_name, player_pass),

@@ -7,7 +7,7 @@ class DifficultyRepository(DatabaseHelper):
         super().__init__(connection=connection)  # Initialisiert die Verbindung über die Basisklasse
         self.question_id = None
     
-    def get_difficulty_infos(self, get_field,search_field, search_field_value):
+    def Get_difficulty_infos(self, get_field,search_field, search_field_value):
         return self.Get_value_from_table(
             "Difficulty", get_field, search_field, search_field_value)
 

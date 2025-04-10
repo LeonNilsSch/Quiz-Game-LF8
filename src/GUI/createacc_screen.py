@@ -31,7 +31,7 @@ def createAccountScreen():
             messagebox.showerror("Error", "Username is already taken")
             return
 
-        player_repo.create_user(username,password)
+        player_repo.Create_user(username,password)
 
         messagebox.showinfo("Success", "Account created successfully")
         createacc_window.destroy()

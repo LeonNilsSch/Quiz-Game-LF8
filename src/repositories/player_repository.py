@@ -7,10 +7,34 @@ class PlayerRepository(DatabaseHelper):
         super().__init__(connection=connection)
         self.player_id = None 
 
-
+    def Get_player_id(self):
+        return self.player_id
+    
     def Get_playerfield_info(self,field):
         return self.Get_value_from_table("Player",field, "playerID", self.player_id)
 
+    def Get_all_player_infos_by_name(self, player_name): 
+        self.Get_value_from_table("Player", "*", "playerName", player_name)
+        
+    def Get_all_player_achievements(self):
+        return self.Get_value_from_table(
+            "PlayerToAchievement", "achievementID", "playerID", self.player_id
+        )
+        
+    def Get_player_achievments(self):
+        self.cursor.execute(
+            """
+                            SELECT pta.achievementID, a.achievementID  
+                            FROM PlayerToAchievement pta
+                            JOIN Achievement a
+                            ON a.achievementID = pta.achievementID
+                            WHERE pta.playerID = ?
+                            """,
+            (self.player_id,),
+        )
+        rows = self.cursor.fetchall()
+        return [row[0] for row in rows]
+        
     def Player_login_check(self, player_name, player_password):
         self.cursor.execute(
             """
@@ -25,29 +49,11 @@ class PlayerRepository(DatabaseHelper):
             return self.player_id
         else:
             return None
-    
-    def Get_player_achievments(self):
-        self.cursor.execute(
-            """
-                            SELECT pta.achievementID, a.achievementID  
-                            FROM PlayerToAchievement pta
-                            JOIN Achievement a
-                            ON a.achievementID = pta.achievementID
-                            WHERE pta.playerID = ?
-                            """,
-            (self.player_id,),
-        )
-        rows = self.cursor.fetchall()
-        return [row[0] for row in rows]
-    
-    
-    def Get_all_player_infos_by_name(self, player_name): 
-        self.Get_value_from_table("Player", "*", "playerName", player_name)
-        
+   
     def Update_player_field(self,update_field, new_value):
        self.Update_field_value("Player", update_field, new_value, self.player_id, "playerID")
     
-    def create_user(self, player_name, player_password):
+    def Create_user(self, player_name, player_password):
         self.cursor.execute(
             """ INSERT INTO Player(playerName, playerPassword) VALUES (?,?)""",
             (
@@ -58,10 +64,6 @@ class PlayerRepository(DatabaseHelper):
         self.con.commit()
         return
 
-    def Get_all_player_achievements(self):
-        return self.Get_value_from_table(
-            "PlayerToAchievement", "achievementID", "playerID", self.player_id
-        )
 
     def Update_high_score(self,player_id, new_score):
         current_score = self.Get_value_from_table("Player", "playerScore", "playerID", self.player_id)
@@ -69,9 +71,7 @@ class PlayerRepository(DatabaseHelper):
             self.Update_field_value("Player", "playerScore", new_score, self.player_id, "playerID")
             print(f"Player {player_id} score updated to {new_score}.")
             
-    def Get_player_id(self):
-        return self.player_id
-            
+      
 
     def Get_all_players_sorted_by_score(self):
         self.cursor.execute(
@@ -79,6 +79,7 @@ class PlayerRepository(DatabaseHelper):
         )
         rows = self.cursor.fetchall()
         return [{"playerName": row[0], "playerScore": row[1]} for row in rows]
+    
     
     def Achievment_player_info(self):
         self.cursor.execute(""" 
@@ -96,7 +97,7 @@ class PlayerRepository(DatabaseHelper):
                                 Player p ON ap.playerID = p.playerID
                             WHERE 
                                 p.playerID = ?
-                            """, (self.player_id,)  # Add the comma here so that it is interpreted as a tuple.
+                            """, (self.player_id,)  
                         )
 
         self.con.commit()
@@ -106,8 +107,8 @@ class PlayerRepository(DatabaseHelper):
         achievements = []
         for achievement in results:
             achievements.append({
-                "name": achievement[0],  # Name of the Achievement
-                "achieved": achievement[1] == 'Achieved',  # Status als boolean
+                "name": achievement[0], 
+                "achieved": achievement[1] == 'Achieved', 
             })
         
         return achievements 

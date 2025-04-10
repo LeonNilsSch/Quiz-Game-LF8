@@ -226,7 +226,7 @@ class GameplayScreen:
         difficulty = self.current_question["difficulty"]
         difficulty_repo = DifficultyRepository()
         difficulty_name = difficulty_repo.Get_value_from_table("Difficulty", "difficultyName", "difficultyID",difficulty)
-        question_points = difficulty_repo.get_difficulty_infos("difficultyPoints","difficultyID",difficulty)
+        question_points = difficulty_repo.Get_difficulty_infos("difficultyPoints","difficultyID",difficulty)
         # print("difficulty 2", difficulty)
         # question_points = self.calculate_question_points(is_correct, difficulty, self.time_left)
        
